@@ -11,13 +11,13 @@ using namespace std;
 
 #include "Evaluation.h"
 #include "HillClimb.h"
-#include "MersenneTwister.h"
 #include "Util.h"
 #include "MiddleLayer.h"
+#include <random>
 
 int main()
 {
-	MTRand rand;
+	Random rand;
 	vector<bool> test = rand_vector(rand, 2000);
 	print(test);
 
@@ -26,6 +26,7 @@ int main()
 	float fitness = layer.evaluate(test);
 	cout << fitness << endl;
 	next_best(rand, test, fitness, layer);
+	print(test);
 	cout << fitness << ' ' << layer.seen.size() << " " << layer.counter << endl;
 
 	return 0;

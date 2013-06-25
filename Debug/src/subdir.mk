@@ -7,18 +7,21 @@ CPP_SRCS += \
 ../src/Evaluation.cpp \
 ../src/HillCimb.cpp \
 ../src/MiddleLayer.cpp \
+../src/Util.cpp \
 ../src/main.cpp 
 
 OBJS += \
 ./src/Evaluation.o \
 ./src/HillCimb.o \
 ./src/MiddleLayer.o \
+./src/Util.o \
 ./src/main.o 
 
 CPP_DEPS += \
 ./src/Evaluation.d \
 ./src/HillCimb.d \
 ./src/MiddleLayer.d \
+./src/Util.d \
 ./src/main.d 
 
 

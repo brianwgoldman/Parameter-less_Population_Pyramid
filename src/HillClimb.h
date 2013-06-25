@@ -9,9 +9,9 @@
 #define HILLCLIMB_H_
 
 #include "Evaluation.h"
-#include "MersenneTwister.h"
+#include "Util.h"
 
-void next_best(MTRand & rand, vector<bool> & solution, float & fitnes, Evaluator& evaluator);
+void next_best(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
 
 
 #endif /* HILLCLIMB_H_ */

@@ -10,14 +10,10 @@
 
 using namespace std;
 
-void next_best(MTRand & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
+void next_best(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
 {
 	// set up data structure for random bit selection
-	vector<int> options(solution.size(), 0);
-	for(size_t i=0; i < options.size(); i++)
-	{
-		options[i] = i;
-	}
+	auto options = indices(solution.size());
 
 	int unused;
 	int index, working = 0;
@@ -30,7 +26,7 @@ void next_best(MTRand & rand, vector<bool> & solution, float & fitness, Evaluato
 		improved = false;
 		while(unused >= 0 and not improved)
 		{
-			index = rand.randInt(unused);
+			index = std::uniform_int_distribution<int>(0, unused)(rand);
 			working = options[index];
 			swap(options[unused], options[index]);
 			unused -= 1;

@@ -9,27 +9,17 @@
 #define UTIL_H_
 
 #include <vector>
-#include <ostream>
+#include <iostream>
+#include <random>
+
 using std::vector;
-#include "MersenneTwister.h"
+using Random=std::mt19937;
 
-vector<bool> rand_vector(MTRand& rand, const int length)
-{
-	vector<bool> vect(length, 0);
-	for(size_t index=0; index < vect.size(); index++)
-	{
-		vect[index] = rand.randInt(1);
-	}
-	return vect;
-}
 
-void print(vector<bool> & vect, ostream & out=std::cout)
-{
-	for(const auto & bit: vect)
-	{
-		out << bit;
-	}
-	out << std::endl;
+vector<bool> rand_vector(Random& rand, const int length);
 
-}
+void print(vector<bool> & vect, std::ostream & out=std::cout);
+
+vector<int> indices(const int length);
+
 #endif /* UTIL_H_ */
