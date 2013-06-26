@@ -17,25 +17,42 @@ using namespace std;
 #include "Population.h"
 #include <array>
 
-int main()
+int main(int argc, char * argv[])
 {
 	Random rand;
-	Population pop;
+	std::random_device rd;
+	rand.seed(rd());
+	int length = 300;
+	if(argc > 1)
+	{
+		length = atoi(argv[1]);
+	}
+	Population pop(length);
 	DeceptiveTrap evaluator(5);
 	Middle_Layer layer(evaluator);
 
-	for(int i=0; i<20; i++)
+	for(int i=0; i<200; i++)
 	{
-		vector<bool> test = rand_vector(rand, 20);
-		print(test);
-
+		vector<bool> test = rand_vector(rand, length);
 		float fitness = layer.evaluate(test);
-		cout << fitness << endl;
 		next_best(rand, test, fitness, layer);
 		print(test);
-		cout << fitness << ' ' << layer.seen.size() << " " << layer.counter << endl;
 		pop.add(test);
+		pop.rebuild_tree(rand);
 	}
+	// pop.rebuild_tree(rand);
+	for(auto& mask: pop.masks)
+	{
+		if(mask.size() == 5)
+		{
+			for(auto& value: mask)
+			{
+				cout << ' ' << value;
+			}
+			cout << endl;
+		}
+	}
+	cout << layer.seen.size() << ' ' << layer.counter << endl;
 	// TODO When looking for donation patterns, guess and test in random order
 	return 0;
 }
