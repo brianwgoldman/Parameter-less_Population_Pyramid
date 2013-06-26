@@ -14,20 +14,28 @@ using namespace std;
 #include "Util.h"
 #include "MiddleLayer.h"
 #include <random>
+#include "Population.h"
+#include <array>
 
 int main()
 {
 	Random rand;
-	vector<bool> test = rand_vector(rand, 2000);
-	print(test);
-
+	Population pop;
 	DeceptiveTrap evaluator(5);
 	Middle_Layer layer(evaluator);
-	float fitness = layer.evaluate(test);
-	cout << fitness << endl;
-	next_best(rand, test, fitness, layer);
-	print(test);
-	cout << fitness << ' ' << layer.seen.size() << " " << layer.counter << endl;
 
+	for(int i=0; i<20; i++)
+	{
+		vector<bool> test = rand_vector(rand, 20);
+		print(test);
+
+		float fitness = layer.evaluate(test);
+		cout << fitness << endl;
+		next_best(rand, test, fitness, layer);
+		print(test);
+		cout << fitness << ' ' << layer.seen.size() << " " << layer.counter << endl;
+		pop.add(test);
+	}
+	// TODO When looking for donation patterns, guess and test in random order
 	return 0;
 }
