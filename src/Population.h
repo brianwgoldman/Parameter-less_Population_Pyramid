@@ -9,6 +9,7 @@
 #define POPULATION_H_
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <array>
 #include <cmath>
 #include <algorithm>
@@ -17,6 +18,7 @@ using std::unordered_map;
 using std::array;
 using std::log;
 #include "Util.h"
+#include "Evaluation.h"
 
 class Population
 {
@@ -28,15 +30,18 @@ private:
 
 	float get_distance(int x, int y);
 	float get_distance(const vector<int> & c1, const vector<int> & c2);
-	int length;
+	size_t length;
+
+	bool donate(vector<bool> & solution, float & fitness, vector<bool> & source, const vector<int> & cluster, Evaluator& evaluator);
 
 public:
-	Population(int l): length(l), masks(l-2) {}
+	Population(int l);
 	virtual ~Population() = default;
 	vector<vector<bool> > solutions;
-	vector<vector<int> > masks;
+	vector<vector<int> > clusters;
 
 	void add(const vector<bool> & solution);
+	void improve(Random& rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
 	void rebuild_tree(Random& rand);
 
 };

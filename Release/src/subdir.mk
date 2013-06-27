@@ -8,6 +8,7 @@ CPP_SRCS += \
 ../src/HillCimb.cpp \
 ../src/MiddleLayer.cpp \
 ../src/Population.cpp \
+../src/Pyramid.cpp \
 ../src/Util.cpp \
 ../src/main.cpp 
 
@@ -16,6 +17,7 @@ OBJS += \
 ./src/HillCimb.o \
 ./src/MiddleLayer.o \
 ./src/Population.o \
+./src/Pyramid.o \
 ./src/Util.o \
 ./src/main.o 
 
@@ -24,6 +26,7 @@ CPP_DEPS += \
 ./src/HillCimb.d \
 ./src/MiddleLayer.d \
 ./src/Population.d \
+./src/Pyramid.d \
 ./src/Util.d \
 ./src/main.d 
 

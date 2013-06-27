@@ -13,46 +13,38 @@ using namespace std;
 #include "HillClimb.h"
 #include "Util.h"
 #include "MiddleLayer.h"
-#include <random>
 #include "Population.h"
-#include <array>
+#include "Pyramid.h"
 
 int main(int argc, char * argv[])
 {
 	Random rand;
 	std::random_device rd;
 	rand.seed(rd());
-	int length = 300;
+	int length = 20;
 	if(argc > 1)
 	{
 		length = atoi(argv[1]);
 	}
-	Population pop(length);
+	Pyramid pyramid(length);
 	DeceptiveTrap evaluator(5);
 	Middle_Layer layer(evaluator);
 
-	for(int i=0; i<200; i++)
+	float fitness = 0;
+	while(fitness < 1.0)
 	{
-		vector<bool> test = rand_vector(rand, length);
-		float fitness = layer.evaluate(test);
-		next_best(rand, test, fitness, layer);
-		print(test);
-		pop.add(test);
-		pop.rebuild_tree(rand);
+		cout << "-------- Start --------" << endl;
+		vector<bool> solution = rand_vector(rand, length);
+		fitness = layer.evaluate(solution);
+		next_best(rand, solution, fitness, layer);
+		print(solution);
+		// return 0;
+		pyramid.climb(rand, solution, fitness, evaluator);
+		cout << "Climbed fit " << fitness << endl;
+		print(solution);
 	}
-	// pop.rebuild_tree(rand);
-	for(auto& mask: pop.masks)
-	{
-		if(mask.size() == 5)
-		{
-			for(auto& value: mask)
-			{
-				cout << ' ' << value;
-			}
-			cout << endl;
-		}
-	}
-	cout << layer.seen.size() << ' ' << layer.counter << endl;
-	// TODO When looking for donation patterns, guess and test in random order
+
+	cout << layer.seen.size() << ' ' << layer.counter
+			<< ' ' << pyramid.seen.size() << endl;
 	return 0;
 }

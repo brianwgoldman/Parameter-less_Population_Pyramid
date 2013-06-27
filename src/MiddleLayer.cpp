@@ -9,15 +9,16 @@
 
 float Middle_Layer::evaluate(const vector<bool>& solution)
 {
-	try
+	counter ++;
+	const auto& it = seen.find(solution);
+	if(it != seen.end())
 	{
-		return seen.at(solution);
+		return it->second;
 	}
-	catch (const std::out_of_range& oor)
+	else
 	{
 		float fitness = evaluator.evaluate(solution);
 		seen[solution] = fitness;
-		counter ++;
 		return fitness;
 	}
 }

@@ -15,14 +15,14 @@ void next_best(Random & rand, vector<bool> & solution, float & fitness, Evaluato
 	// set up data structure for random bit selection
 	auto options = indices(solution.size());
 
-	int unused;
+	int unused = options.size()-1;
 	int index, working = 0;
 	float new_fitness;
 	bool improved;
 	// Loop as long as improvement is made
 	do
 	{
-		unused = options.size()-1;
+
 		improved = false;
 		while(unused >= 0 and not improved)
 		{
@@ -42,6 +42,9 @@ void next_best(Random & rand, vector<bool> & solution, float & fitness, Evaluato
 				solution[working] = not solution[working];
 			}
 		}
+		// The index used to make this improvement isn't valid next time
+		swap(options[unused+1], options[options.size()-1]);
+		unused = options.size()-2;
 	} while(improved);
 }
 

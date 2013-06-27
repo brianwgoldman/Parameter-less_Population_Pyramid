@@ -9,6 +9,16 @@
 #include <iostream>
 using namespace std;
 
+Population::Population(int l)
+{
+	length = l;
+	clusters.resize(2*length - 1);
+	for(size_t i = 0; i < length; i++)
+	{
+		clusters[i].push_back(i);
+	}
+}
+
 void Population::add(const vector<bool> & solution)
 {
 	solutions.push_back(solution);
@@ -80,27 +90,28 @@ float Population::get_distance(const vector<int> & c1, const vector<int> & c2)
 
 void Population::rebuild_tree(Random& rand)
 {
-	vector<vector<int> > clusters(length);
-	for(size_t i=0; i < clusters.size(); i++)
+	unordered_set<int> usable;
+	for(size_t i=0; i < length; i++)
 	{
-		clusters[i].push_back(i);
+		usable.insert(i);
 	}
+	// shuffle the single variable clusters
+	shuffle(clusters.begin(), next(clusters.begin(), length), rand);
 	vector<pair<int, int> > minimums;
 	float min_value;
 	int choice;
 
-	for(size_t index=0; index < masks.size(); index++)
+	// rebuild all clusters after the single variable clusters
+	for(size_t index=length; index < clusters.size(); index++)
 	{
 		min_value=3;
 		minimums.clear();
 		// for all pairs of clusters
-		for(size_t i=0; i < clusters.size()-1; i++)
+		for(auto i=usable.begin(); i != usable.end(); i++)
 		{
-			for(size_t j=i+1; j < clusters.size(); j++)
+			for(auto j=next(i); j != usable.end(); j++)
 			{
-				float distance;
-				// TODO memory here
-				distance = get_distance(clusters[i], clusters[j]);
+				float distance = get_distance(clusters[*i], clusters[*j]);
 				if(distance <= min_value)
 				{
 					if(distance < min_value)
@@ -108,7 +119,7 @@ void Population::rebuild_tree(Random& rand)
 						min_value = distance;
 						minimums.clear();
 					}
-					minimums.push_back(pair<int, int>(i, j));
+					minimums.push_back(pair<int, int>(*i, *j));
 				}
 			}
 		}
@@ -116,22 +127,75 @@ void Population::rebuild_tree(Random& rand)
 		choice = std::uniform_int_distribution<int>(0, minimums.size()-1)(rand);
 		size_t first = minimums[choice].first;
 		size_t second = minimums[choice].second;
-		// Concatenate the clusters
-		clusters[second].insert(clusters[second].end(),
-				clusters[first].begin(), clusters[first].end());
 
-		// save the combined cluster
-		masks[index] = clusters[second];
+		// create new cluster
+		clusters[index] = clusters[first];
+		clusters[index].insert(clusters[index].end(),
+				clusters[second].begin(), clusters[second].end());
+		usable.erase(first);
+		usable.erase(second);
+		usable.insert(index);
+	}
+}
 
-		// swap the first to the end
-		std::swap(clusters[first], clusters[clusters.size()-1]);
+bool Population::donate(vector<bool> & solution, float & fitness, vector<bool> & source, const vector<int> & cluster, Evaluator& evaluator)
+{
+	// swap all of the cluster indices, watching for any change
+	bool changed=false;
+	for(const auto& index: cluster)
+	{
+		changed |= (solution[index] != source[index]);
+		vector<bool>::swap(solution[index], source[index]);
+	}
 
-		// If the second choice was originally at the end
-		if(second == clusters.size()-1)
+	if(changed)
+	{
+		float new_fitness = evaluator.evaluate(solution);
+		if(fitness <= new_fitness)
 		{
-			second = first;
+			fitness = new_fitness;
+			// copy pattern back into the source, leave solution changed
+			for(const auto& index: cluster)
+			{
+				source[index] = solution[index];
+			}
 		}
-		std::swap(clusters[second], clusters[clusters.size()-2]);
-		clusters.pop_back();
+		else
+		{
+			// revert both solution and source
+			for(const auto& index: cluster)
+			{
+				vector<bool>::swap(solution[index], source[index]);
+			}
+		}
+	}
+	return changed;
+}
+
+void Population::improve(Random& rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
+{
+	auto options = indices(solutions.size());
+	int unused;
+	int index, working = 0;
+	bool different;
+
+	// for each cluster of size > 1
+	for(size_t i = length; i < clusters.size(); i++)
+	{
+		unused = options.size()-1;
+		different = false;
+		// Find a donor which has at least one gene value different
+		// from the current solution for this cluster of genes
+		while(unused >= 0 and not different)
+		{
+			// choose a donor
+			index = std::uniform_int_distribution<int>(0, unused)(rand);
+			working = options[index];
+			swap(options[unused], options[index]);
+			unused -= 1;
+
+			// attempt the donation
+			different = donate(solution, fitness, solutions[working], clusters[i], evaluator);
+		}
 	}
 }
