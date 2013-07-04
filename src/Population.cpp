@@ -90,7 +90,7 @@ float Population::get_distance(const vector<int> & c1, const vector<int> & c2)
 
 void Population::rebuild_tree(Random& rand)
 {
-	unordered_set<int> usable;
+	unordered_set<size_t> usable;
 	for(size_t i=0; i < length; i++)
 	{
 		usable.insert(i);
@@ -100,6 +100,15 @@ void Population::rebuild_tree(Random& rand)
 	vector<pair<int, int> > minimums;
 	float min_value;
 	int choice;
+
+	unordered_map<int, unordered_map<int, float> > distances;
+	for(size_t i=0; i < length - 1; i++)
+	{
+		for(size_t j=i + 1; j < length; j++)
+		{
+			distances[i][j] = get_distance(clusters[i], clusters[j]);
+		}
+	}
 
 	// rebuild all clusters after the single variable clusters
 	for(size_t index=length; index < clusters.size(); index++)
@@ -111,7 +120,13 @@ void Population::rebuild_tree(Random& rand)
 		{
 			for(auto j=next(i); j != usable.end(); j++)
 			{
-				float distance = get_distance(clusters[*i], clusters[*j]);
+				auto x = *i;
+				auto y = *j;
+				if(x > y)
+				{
+					std::swap(x, y);
+				}
+				float distance = distances[x][y];
 				if(distance <= min_value)
 				{
 					if(distance < min_value)
@@ -134,6 +149,41 @@ void Population::rebuild_tree(Random& rand)
 				clusters[second].begin(), clusters[second].end());
 		usable.erase(first);
 		usable.erase(second);
+
+		for(auto i=usable.begin(); i != usable.end(); i++)
+		{
+			auto x = *i;
+			float first_distance;
+			float second_distance;
+			if(x > first)
+			{
+				first_distance = distances[first][x];
+			}
+			else
+			{
+				first_distance = distances[x][first];
+				distances[x].erase(first);
+			}
+
+			first_distance *= clusters[first].size();
+			if(x > second)
+			{
+				second_distance = distances[second][x];
+			}
+			else
+			{
+				second_distance = distances[x][second];
+				distances[x].erase(first);
+			}
+
+			second_distance *= clusters[second].size();
+			distances[x][index] = ((first_distance + second_distance) /
+						   (clusters[first].size() + clusters[second].size()));
+
+		}
+		distances.erase(first);
+		distances.erase(second);
+		//*/
 		usable.insert(index);
 	}
 }
