@@ -183,7 +183,6 @@ void Population::rebuild_tree(Random& rand)
 		}
 		distances.erase(first);
 		distances.erase(second);
-		//*/
 		usable.insert(index);
 	}
 }

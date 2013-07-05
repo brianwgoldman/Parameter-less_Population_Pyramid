@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/Configuration.cpp \
 ../src/Evaluation.cpp \
 ../src/HillCimb.cpp \
 ../src/MiddleLayer.cpp \
@@ -13,6 +14,7 @@ CPP_SRCS += \
 ../src/main.cpp 
 
 OBJS += \
+./src/Configuration.o \
 ./src/Evaluation.o \
 ./src/HillCimb.o \
 ./src/MiddleLayer.o \
@@ -22,6 +24,7 @@ OBJS += \
 ./src/main.o 
 
 CPP_DEPS += \
+./src/Configuration.d \
 ./src/Evaluation.d \
 ./src/HillCimb.d \
 ./src/MiddleLayer.d \

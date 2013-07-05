@@ -15,17 +15,18 @@ using namespace std;
 #include "MiddleLayer.h"
 #include "Population.h"
 #include "Pyramid.h"
+#include "Configuration.h"
 
 int main(int argc, char * argv[])
 {
 	Random rand;
 	std::random_device rd;
+
+	Configuration config;
+	config.parse(argc, argv);
+
 	rand.seed(rd());
-	int length = 20;
-	if(argc > 1)
-	{
-		length = atoi(argv[1]);
-	}
+	int length = config.get<int>("length");
 	Pyramid pyramid(length);
 	DeceptiveTrap evaluator(5);
 	Middle_Layer layer(evaluator);
@@ -38,7 +39,6 @@ int main(int argc, char * argv[])
 		fitness = layer.evaluate(solution);
 		next_best(rand, solution, fitness, layer);
 		print(solution);
-		// return 0;
 		pyramid.climb(rand, solution, fitness, evaluator);
 		cout << "Climbed fit " << fitness << endl;
 		print(solution);
