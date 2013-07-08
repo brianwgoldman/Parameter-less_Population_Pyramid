@@ -11,7 +11,8 @@
 #include "Evaluation.h"
 #include "Util.h"
 
-void next_best(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
+void first_improvement(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
 
+void steepest_ascent(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
 
 #endif /* HILLCLIMB_H_ */

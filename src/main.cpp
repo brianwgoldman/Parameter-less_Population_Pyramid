@@ -27,6 +27,11 @@ int main(int argc, char * argv[])
 
 	rand.seed(rd());
 	int length = config.get<int>("length");
+	auto hc = first_improvement;
+	if (config.get<string>("hill_climber") == "steepest_ascent")
+	{
+		hc = steepest_ascent;
+	}
 	Pyramid pyramid(length);
 	DeceptiveTrap evaluator(5);
 	Middle_Layer layer(evaluator);
@@ -37,7 +42,7 @@ int main(int argc, char * argv[])
 		cout << "-------- Start --------" << endl;
 		vector<bool> solution = rand_vector(rand, length);
 		fitness = layer.evaluate(solution);
-		next_best(rand, solution, fitness, layer);
+		hc(rand, solution, fitness, layer);
 		print(solution);
 		pyramid.climb(rand, solution, fitness, evaluator);
 		cout << "Climbed fit " << fitness << endl;

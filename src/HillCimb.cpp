@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void next_best(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
+void first_improvement(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
 {
 	// set up data structure for random bit selection
 	auto options = indices(solution.size());
@@ -48,4 +48,41 @@ void next_best(Random & rand, vector<bool> & solution, float & fitness, Evaluato
 	} while(improved);
 }
 
-
+void steepest_ascent(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
+{
+	float new_fitness;
+	bool improved;
+	vector<size_t> bests;
+	size_t previous = -1;
+	// Loop as long as improvement is made
+	do
+	{
+		improved = false;
+		for(size_t working=0; working < solution.size(); working++)
+		{
+			if(working != previous)
+			{
+				solution[working] = not solution[working];
+				new_fitness = evaluator.evaluate(solution);
+				if(fitness <= new_fitness)
+				{
+					if(fitness < new_fitness)
+					{
+						fitness = new_fitness;
+						improved=true;
+						bests.clear();
+					}
+					bests.push_back(working);
+				}
+				solution[working] = not solution[working];
+			}
+		}
+		if(improved)
+		{
+			int index = std::uniform_int_distribution<int>(0, bests.size() - 1)(rand);
+			previous = bests[index];
+			solution[previous] = not solution[previous];
+			bests.clear();
+		}
+	} while(improved);
+}
