@@ -30,6 +30,7 @@ int main(int argc, char * argv[])
 	int length = config.get<int>("length");
 	int k_size = config.get<int>("k");
 	int runs = config.get<int>("runs");
+	int pop_size = config.get<int>("pop_size");
 	hc_pointer hc = first_improvement;
 
 	if (config.get<string>("hill_climber") == "steepest_ascent")
@@ -43,7 +44,7 @@ int main(int argc, char * argv[])
 		Middle_Layer layer(evaluator);
 		//Pyramid pyramid(length);
 		//TODO TEST THIS, MAKE CONFIGURABLE
-		LTGA pyramid(length, 30);
+		LTGA pyramid(length, pop_size);
 
 		pyramid.optimize(rand, layer, hc);
 
