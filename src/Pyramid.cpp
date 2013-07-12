@@ -25,6 +25,7 @@ bool Pyramid::add_unique(Random& rand, const vector<bool> & solution, size_t lev
 		if(pops.size() == level)
 		{
 			pops.push_back(Population(length));
+			pops[level].never_use_singletons();
 		}
 		pops[level].add(solution);
 		pops[level].rebuild_tree(rand);
@@ -32,4 +33,16 @@ bool Pyramid::add_unique(Random& rand, const vector<bool> & solution, size_t lev
 		return true;
 	}
 	return false;
+}
+
+void Pyramid::optimize(Random& rand, Middle_Layer& evaluator, int length, hc_pointer hc)
+{
+	float fitness = 0;
+	while(fitness < 1.0)
+	{
+		vector<bool> solution = rand_vector(rand, length);
+		fitness = evaluator.evaluate(solution);
+		hc(rand, solution, fitness, evaluator);
+		climb(rand, solution, fitness, evaluator);
+	}
 }

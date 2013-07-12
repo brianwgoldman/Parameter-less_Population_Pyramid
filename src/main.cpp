@@ -27,29 +27,25 @@ int main(int argc, char * argv[])
 
 	rand.seed(rd());
 	int length = config.get<int>("length");
-	auto hc = first_improvement;
+	int k_size = config.get<int>("k");
+	int runs = config.get<int>("runs");
+	hc_pointer hc = first_improvement;
+
 	if (config.get<string>("hill_climber") == "steepest_ascent")
 	{
 		hc = steepest_ascent;
 	}
-	Pyramid pyramid(length);
-	DeceptiveTrap evaluator(5);
-	Middle_Layer layer(evaluator);
-
-	float fitness = 0;
-	while(fitness < 1.0)
+	DeceptiveTrap evaluator(k_size);
+	long int total_evals = 0;
+	for(int run=0; run < runs; run++)
 	{
-		cout << "-------- Start --------" << endl;
-		vector<bool> solution = rand_vector(rand, length);
-		fitness = layer.evaluate(solution);
-		hc(rand, solution, fitness, layer);
-		print(solution);
-		pyramid.climb(rand, solution, fitness, evaluator);
-		cout << "Climbed fit " << fitness << endl;
-		print(solution);
+		Pyramid pyramid(length);
+		Middle_Layer layer(evaluator);
+		pyramid.optimize(rand, layer, length, hc);
+		cout << layer.seen.size() << ' ' << layer.counter
+			 << ' ' << pyramid.seen.size() << endl;
+		total_evals += layer.seen.size();
 	}
-
-	cout << layer.seen.size() << ' ' << layer.counter
-			<< ' ' << pyramid.seen.size() << endl;
+	cout << "TOTAL " << total_evals << " AVERAGE: " << total_evals / ((float)runs) << endl;
 	return 0;
 }

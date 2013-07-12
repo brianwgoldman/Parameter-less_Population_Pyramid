@@ -13,9 +13,14 @@ Population::Population(int l)
 {
 	length = l;
 	clusters.resize(2*length - 1);
+	cluster_ordering.resize(clusters.size());
 	for(size_t i = 0; i < length; i++)
 	{
 		clusters[i].push_back(i);
+	}
+	for(size_t i = 0; i < cluster_ordering.size(); i++)
+	{
+		cluster_ordering[i] = i;
 	}
 }
 
@@ -229,8 +234,9 @@ void Population::improve(Random& rand, vector<bool> & solution, float & fitness,
 	bool different;
 
 	// for each cluster of size > 1
-	for(size_t i = length; i < clusters.size(); i++)
+	for(auto& cluster_index: cluster_ordering)
 	{
+		auto cluster = clusters[cluster_index];
 		unused = options.size()-1;
 		different = false;
 		// Find a donor which has at least one gene value different
@@ -244,7 +250,16 @@ void Population::improve(Random& rand, vector<bool> & solution, float & fitness,
 			unused -= 1;
 
 			// attempt the donation
-			different = donate(solution, fitness, solutions[working], clusters[i], evaluator);
+			different = donate(solution, fitness, solutions[working], cluster, evaluator);
 		}
+	}
+}
+
+void Population::never_use_singletons()
+{
+	cluster_ordering.resize(length - 1);
+	for(size_t i=0; i < cluster_ordering.size(); i++)
+	{
+		cluster_ordering[i] = i + length;
 	}
 }

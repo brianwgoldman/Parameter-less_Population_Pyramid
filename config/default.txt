@@ -1,2 +1,4 @@
 length 20 # Sets the number of bits in the problem
 hill_climber first_improvement # Which hill climber to use, "first_improvement" or "steepest_ascent"
+k 5
+runs 10

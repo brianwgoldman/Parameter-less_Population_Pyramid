@@ -11,6 +11,8 @@
 #include "Population.h"
 #include "Evaluation.h"
 #include "Util.h"
+#include "MiddleLayer.h"
+#include "HillClimb.h"
 
 class Pyramid
 {
@@ -24,6 +26,7 @@ public:
 	Pyramid(int l): length(l) {}
 	virtual ~Pyramid() = default;
 	void climb(Random& rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
+	void optimize(Random& rand, Middle_Layer& evaluator, int length, hc_pointer hc);
 };
 
 #endif /* PYRAMID_H_ */

@@ -39,10 +39,13 @@ public:
 	virtual ~Population() = default;
 	vector<vector<bool> > solutions;
 	vector<vector<int> > clusters;
+	vector<int> cluster_ordering;
 
 	void add(const vector<bool> & solution);
 	void improve(Random& rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
 	void rebuild_tree(Random& rand);
+
+	void never_use_singletons();
 
 };
 
