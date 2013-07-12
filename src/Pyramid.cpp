@@ -35,7 +35,7 @@ bool Pyramid::add_unique(Random& rand, const vector<bool> & solution, size_t lev
 	return false;
 }
 
-void Pyramid::optimize(Random& rand, Middle_Layer& evaluator, int length, hc_pointer hc)
+void Pyramid::optimize(Random& rand, Evaluator& evaluator, hc_pointer hc)
 {
 	float fitness = 0;
 	while(fitness < 1.0)

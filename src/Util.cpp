@@ -8,7 +8,7 @@
 #include "Util.h"
 
 
-vector<bool> rand_vector(Random& rand, const int length)
+vector<bool> rand_vector(Random& rand, const size_t length)
 {
 	std::uniform_int_distribution<int> rbit(0, 1);
 	vector<bool> vect(length, 0);
@@ -29,7 +29,7 @@ void print(vector<bool> & vect, std::ostream & out)
 
 }
 
-vector<int> indices(const int length)
+vector<int> indices(const size_t length)
 {
 	vector<int> vect(length, 0);
 	for(size_t i=0; i < vect.size(); i++)

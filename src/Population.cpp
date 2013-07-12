@@ -263,3 +263,10 @@ void Population::never_use_singletons()
 		cluster_ordering[i] = i + length;
 	}
 }
+
+void Population::rand_smallest_first(Random& rand)
+{
+	std::shuffle(cluster_ordering.begin(), cluster_ordering.end(), rand);
+	auto smallest = [this](int x, int y) { return clusters[x].size() < clusters[y].size(); };
+	std::stable_sort(cluster_ordering.begin(), cluster_ordering.end(), smallest);
+}

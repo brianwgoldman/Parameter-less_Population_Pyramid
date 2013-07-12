@@ -18,10 +18,12 @@ protected:
 
 public:
 	int counter;
+	float best_fitness;
+	int best_found;
+	std::vector<bool> best_solution;
 	std::unordered_map<vector<bool>, float> seen;
-	Middle_Layer(Evaluator& evaler): evaluator(evaler), counter(0) {}
+	Middle_Layer(Evaluator& evaler): evaluator(evaler), counter(0), best_fitness(0), best_found(0) {}
 	virtual float evaluate(const vector<bool> & solution) override;
-
 
 
 };

@@ -15,6 +15,7 @@ using namespace std;
 #include "MiddleLayer.h"
 #include "Population.h"
 #include "Pyramid.h"
+#include "LTGA.h"
 #include "Configuration.h"
 
 int main(int argc, char * argv[])
@@ -39,11 +40,15 @@ int main(int argc, char * argv[])
 	long int total_evals = 0;
 	for(int run=0; run < runs; run++)
 	{
-		Pyramid pyramid(length);
 		Middle_Layer layer(evaluator);
-		pyramid.optimize(rand, layer, length, hc);
-		cout << layer.seen.size() << ' ' << layer.counter
-			 << ' ' << pyramid.seen.size() << endl;
+		//Pyramid pyramid(length);
+		//TODO TEST THIS, MAKE CONFIGURABLE
+		LTGA pyramid(length, 30);
+
+		pyramid.optimize(rand, layer, hc);
+
+		cout << layer.seen.size() << ' ' << layer.counter << endl;
+		cout << layer.best_fitness << ' ' << layer.best_found << endl;
 		total_evals += layer.seen.size();
 	}
 	cout << "TOTAL " << total_evals << " AVERAGE: " << total_evals / ((float)runs) << endl;

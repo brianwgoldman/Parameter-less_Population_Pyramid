@@ -7,6 +7,7 @@ CPP_SRCS += \
 ../src/Configuration.cpp \
 ../src/Evaluation.cpp \
 ../src/HillCimb.cpp \
+../src/LTGA.cpp \
 ../src/MiddleLayer.cpp \
 ../src/Population.cpp \
 ../src/Pyramid.cpp \
@@ -17,6 +18,7 @@ OBJS += \
 ./src/Configuration.o \
 ./src/Evaluation.o \
 ./src/HillCimb.o \
+./src/LTGA.o \
 ./src/MiddleLayer.o \
 ./src/Population.o \
 ./src/Pyramid.o \
@@ -27,6 +29,7 @@ CPP_DEPS += \
 ./src/Configuration.d \
 ./src/Evaluation.d \
 ./src/HillCimb.d \
+./src/LTGA.d \
 ./src/MiddleLayer.d \
 ./src/Population.d \
 ./src/Pyramid.d \

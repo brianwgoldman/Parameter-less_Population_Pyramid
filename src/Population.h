@@ -46,6 +46,7 @@ public:
 	void rebuild_tree(Random& rand);
 
 	void never_use_singletons();
+	void rand_smallest_first(Random& rand);
 
 };
 

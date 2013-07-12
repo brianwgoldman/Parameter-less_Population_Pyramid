@@ -16,10 +16,10 @@ using std::vector;
 using Random=std::mt19937;
 
 
-vector<bool> rand_vector(Random& rand, const int length);
+vector<bool> rand_vector(Random& rand, const size_t length);
 
 void print(vector<bool> & vect, std::ostream & out=std::cout);
 
-vector<int> indices(const int length);
+vector<int> indices(const size_t length);
 
 #endif /* UTIL_H_ */
