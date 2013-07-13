@@ -19,7 +19,7 @@ vector<bool> rand_vector(Random& rand, const size_t length)
 	return vect;
 }
 
-void print(vector<bool> & vect, std::ostream & out)
+void print(const vector<bool> & vect, std::ostream & out)
 {
 	for(const auto & bit: vect)
 	{

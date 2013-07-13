@@ -37,20 +37,20 @@ int main(int argc, char * argv[])
 	{
 		hc = steepest_ascent;
 	}
-	DeceptiveTrap evaluator(k_size);
+	DeceptiveStepTrap evaluator(k_size, 2);
 	long int total_evals = 0;
 	for(int run=0; run < runs; run++)
 	{
 		Middle_Layer layer(evaluator);
 		//Pyramid pyramid(length);
-		//TODO TEST THIS, MAKE CONFIGURABLE
+		//TODO MAKE CONFIGURABLE
 		LTGA pyramid(length, pop_size);
 
 		pyramid.optimize(rand, layer, hc);
 
 		cout << layer.seen.size() << ' ' << layer.counter << endl;
 		cout << layer.best_fitness << ' ' << layer.best_found << endl;
-		total_evals += layer.seen.size();
+		total_evals += layer.best_found;
 	}
 	cout << "TOTAL " << total_evals << " AVERAGE: " << total_evals / ((float)runs) << endl;
 	return 0;

@@ -18,7 +18,7 @@ using Random=std::mt19937;
 
 vector<bool> rand_vector(Random& rand, const size_t length);
 
-void print(vector<bool> & vect, std::ostream & out=std::cout);
+void print(const vector<bool> & vect, std::ostream & out=std::cout);
 
 vector<int> indices(const size_t length);
 

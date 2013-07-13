@@ -21,6 +21,7 @@ float DeceptiveTrap::evaluate(const vector<bool> & solution)
 {
 	int partial;
 	int total=0;
+
 	for(size_t i=0; i < solution.size(); i+=trap_size)
 	{
 		partial=0;
@@ -37,3 +38,24 @@ float DeceptiveTrap::evaluate(const vector<bool> & solution)
 	return float(total) / solution.size();
 }
 
+float DeceptiveStepTrap::evaluate(const vector<bool> & solution)
+{
+	int partial;
+	int total=0;
+
+	int trap_maximum = (offset + trap_size) / step_size;
+	for(size_t i=0; i < solution.size(); i+=trap_size)
+	{
+		partial=0;
+		for(size_t index=i; index<i+trap_size; index++)
+		{
+			partial += solution[index];
+		}
+		if(partial < trap_size)
+		{
+			partial = trap_size - partial - 1;
+		}
+		total += (offset + partial) / step_size;
+	}
+	return (float(total) * trap_size) / (solution.size() * trap_maximum);
+}

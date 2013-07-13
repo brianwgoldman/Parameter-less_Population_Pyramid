@@ -28,4 +28,17 @@ public:
 	DeceptiveTrap(int ts): trap_size(ts) {}
 	float evaluate(const vector<bool> & solution) override;
 };
+
+class DeceptiveStepTrap: public Evaluator
+{
+private:
+	int trap_size;
+	int step_size;
+	int offset;
+
+public:
+	DeceptiveStepTrap(int ts, int ss):
+		trap_size(ts), step_size(ss), offset((ts-ss) % ss) {}
+	float evaluate(const vector<bool> & solution) override;
+};
 #endif /* EVALUATION_H_ */

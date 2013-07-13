@@ -56,6 +56,7 @@ void LTGA::optimize(Random& rand, Evaluator& evaluator, hc_pointer hc)
 {
 	float fitness = 0;
 	initialize(rand, evaluator, hc);
+
 	previous_set = construct_set(fitness);
 	while(fitness < 1.0)
 	{

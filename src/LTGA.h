@@ -13,7 +13,6 @@
 #include "Util.h"
 #include "HillClimb.h"
 
-
 class LTGA
 {
 private:

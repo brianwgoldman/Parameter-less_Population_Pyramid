@@ -205,6 +205,7 @@ bool Population::donate(vector<bool> & solution, float & fitness, vector<bool> &
 	if(changed)
 	{
 		float new_fitness = evaluator.evaluate(solution);
+		// NOTE: My previous work used strict improvement
 		if(fitness <= new_fitness)
 		{
 			fitness = new_fitness;
@@ -266,6 +267,7 @@ void Population::never_use_singletons()
 
 void Population::rand_smallest_first(Random& rand)
 {
+	// NOTE: My previous work did not shuffle here
 	std::shuffle(cluster_ordering.begin(), cluster_ordering.end(), rand);
 	auto smallest = [this](int x, int y) { return clusters[x].size() < clusters[y].size(); };
 	std::stable_sort(cluster_ordering.begin(), cluster_ordering.end(), smallest);
