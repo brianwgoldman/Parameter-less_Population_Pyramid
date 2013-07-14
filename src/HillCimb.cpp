@@ -10,7 +10,14 @@
 
 using namespace std;
 
-void first_improvement(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
+
+template <>
+hill_climb::pointer Configuration::get(const string key)
+{
+	return hill_climb::lookup[get<string>(key)];
+}
+
+void hill_climb::first_improvement(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
 {
 	// set up data structure for random bit selection
 	auto options = indices(solution.size());
@@ -48,7 +55,7 @@ void first_improvement(Random & rand, vector<bool> & solution, float & fitness, 
 	} while(improved);
 }
 
-void steepest_ascent(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
+void hill_climb::steepest_ascent(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
 {
 	float new_fitness;
 	bool improved;

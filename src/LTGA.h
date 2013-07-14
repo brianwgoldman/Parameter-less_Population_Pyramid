@@ -27,9 +27,9 @@ public:
 	LTGA(size_t l, size_t p): length(l), pop_size(p), pop(l) {}
 	virtual ~LTGA() = default;
 
-	void initialize(Random& rand, Evaluator& evaluator, hc_pointer hc);
+	void initialize(Random& rand, Evaluator& evaluator, hill_climb::pointer hc);
 	void generation(Random& rand, Evaluator& evaluator);
-	void optimize(Random& rand, Evaluator& evaluator, hc_pointer hc);
+	void optimize(Random& rand, Evaluator& evaluator, hill_climb::pointer hc);
 
 };
 

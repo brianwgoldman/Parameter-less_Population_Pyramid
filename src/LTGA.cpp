@@ -7,7 +7,7 @@
 
 #include "LTGA.h"
 
-void LTGA::initialize(Random & rand, Evaluator & evaluator, hc_pointer hc)
+void LTGA::initialize(Random & rand, Evaluator & evaluator, hill_climb::pointer hc)
 {
 	float fitness;
 	for(size_t i=0; i < pop_size; i++)
@@ -52,7 +52,7 @@ std::unordered_set<vector<bool>> LTGA::construct_set(float& fitness)
 	return set;
 }
 
-void LTGA::optimize(Random& rand, Evaluator& evaluator, hc_pointer hc)
+void LTGA::optimize(Random& rand, Evaluator& evaluator, hill_climb::pointer hc)
 {
 	float fitness = 0;
 	initialize(rand, evaluator, hc);

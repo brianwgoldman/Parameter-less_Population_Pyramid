@@ -31,12 +31,7 @@ int main(int argc, char * argv[])
 	int k_size = config.get<int>("k");
 	int runs = config.get<int>("runs");
 	int pop_size = config.get<int>("pop_size");
-	hc_pointer hc = first_improvement;
-
-	if (config.get<string>("hill_climber") == "steepest_ascent")
-	{
-		hc = steepest_ascent;
-	}
+	hill_climb::pointer hc = config.get<hill_climb::pointer>("hill_climber");
 	DeceptiveStepTrap evaluator(k_size, 2);
 	long int total_evals = 0;
 	for(int run=0; run < runs; run++)

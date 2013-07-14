@@ -25,7 +25,7 @@ public:
 	Pyramid(size_t l): length(l) {}
 	virtual ~Pyramid() = default;
 	void climb(Random& rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
-	void optimize(Random& rand, Evaluator& evaluator, hc_pointer hc);
+	void optimize(Random& rand, Evaluator& evaluator, hill_climb::pointer hc);
 };
 
 #endif /* PYRAMID_H_ */
