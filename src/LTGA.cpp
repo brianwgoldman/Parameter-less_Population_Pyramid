@@ -52,9 +52,10 @@ std::unordered_set<vector<bool>> LTGA::construct_set(float& fitness)
 	return set;
 }
 
-void LTGA::optimize(Random& rand, Evaluator& evaluator, hill_climb::pointer hc)
+void LTGA::optimize(Random& rand, Evaluator& evaluator, Configuration& config)
 {
 	float fitness = 0;
+	auto hc = config.get<hill_climb::pointer>("hill_climber");
 	initialize(rand, evaluator, hc);
 
 	previous_set = construct_set(fitness);

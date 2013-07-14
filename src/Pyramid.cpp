@@ -35,14 +35,15 @@ bool Pyramid::add_unique(Random& rand, const vector<bool> & solution, size_t lev
 	return false;
 }
 
-void Pyramid::optimize(Random& rand, Evaluator& evaluator, hill_climb::pointer hc)
+void Pyramid::optimize(Random& rand, Evaluator& evaluator, Configuration& config)
 {
 	float fitness = 0;
+	auto hill_climber = config.get<hill_climb::pointer>("hill_climber");
 	while(fitness < 1.0)
 	{
 		vector<bool> solution = rand_vector(rand, length);
 		fitness = evaluator.evaluate(solution);
-		hc(rand, solution, fitness, evaluator);
+		hill_climber(rand, solution, fitness, evaluator);
 		climb(rand, solution, fitness, evaluator);
 	}
 }

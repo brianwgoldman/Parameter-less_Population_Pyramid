@@ -12,6 +12,7 @@
 #include "Evaluation.h"
 #include "Util.h"
 #include "HillClimb.h"
+#include "Configuration.h"
 
 class LTGA
 {
@@ -21,15 +22,18 @@ private:
 	Population pop;
 	std::unordered_map<vector<bool>, float> fitnesses;
 	std::unordered_set<vector<bool>> construct_set(float& fitness);
+	void initialize(Random& rand, Evaluator& evaluator, hill_climb::pointer hc);
+	void generation(Random& rand, Evaluator& evaluator);
 
 public:
 	std::unordered_set<vector<bool>> previous_set;
-	LTGA(size_t l, size_t p): length(l), pop_size(p), pop(l) {}
+	LTGA(Configuration& config):
+		length(config.get<int>("length")),
+		pop_size(config.get<int>("pop_size")),
+		pop(config.get<int>("length")) {}
 	virtual ~LTGA() = default;
 
-	void initialize(Random& rand, Evaluator& evaluator, hill_climb::pointer hc);
-	void generation(Random& rand, Evaluator& evaluator);
-	void optimize(Random& rand, Evaluator& evaluator, hill_climb::pointer hc);
+	void optimize(Random& rand, Evaluator& evaluator, Configuration& config);
 
 };
 

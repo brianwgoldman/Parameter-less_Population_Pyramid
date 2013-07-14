@@ -27,21 +27,17 @@ int main(int argc, char * argv[])
 	config.parse(argc, argv);
 
 	rand.seed(rd());
-	int length = config.get<int>("length");
-	int k_size = config.get<int>("k");
 	int runs = config.get<int>("runs");
-	int pop_size = config.get<int>("pop_size");
-	hill_climb::pointer hc = config.get<hill_climb::pointer>("hill_climber");
-	DeceptiveStepTrap evaluator(k_size, 2);
+	DeceptiveStepTrap evaluator(config);
 	long int total_evals = 0;
 	for(int run=0; run < runs; run++)
 	{
 		Middle_Layer layer(evaluator);
 		//Pyramid pyramid(length);
 		//TODO MAKE CONFIGURABLE
-		LTGA pyramid(length, pop_size);
+		LTGA pyramid(config);
 
-		pyramid.optimize(rand, layer, hc);
+		pyramid.optimize(rand, layer, config);
 
 		cout << layer.seen.size() << ' ' << layer.counter << endl;
 		cout << layer.best_fitness << ' ' << layer.best_found << endl;

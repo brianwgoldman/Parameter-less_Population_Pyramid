@@ -8,7 +8,7 @@
 #ifndef EVALUATION_H_
 #define EVALUATION_H_
 #include <vector>
-
+#include "Configuration.h"
 using std::vector;
 using std::size_t;
 
@@ -25,7 +25,8 @@ class DeceptiveTrap: public Evaluator
 private:
 	int trap_size;
 public:
-	DeceptiveTrap(int ts): trap_size(ts) {}
+	DeceptiveTrap(Configuration& config):
+		trap_size(config.get<int>("trap_size")) {}
 	float evaluate(const vector<bool> & solution) override;
 };
 
@@ -37,8 +38,12 @@ private:
 	int offset;
 
 public:
-	DeceptiveStepTrap(int ts, int ss):
-		trap_size(ts), step_size(ss), offset((ts-ss) % ss) {}
+	DeceptiveStepTrap(Configuration& config):
+		trap_size(config.get<int>("trap_size")),
+		step_size(config.get<int>("step_size"))
+		{
+			offset = (trap_size-step_size) % step_size;
+		}
 	float evaluate(const vector<bool> & solution) override;
 };
 #endif /* EVALUATION_H_ */

@@ -19,7 +19,6 @@ namespace hill_climb
 
 	void first_improvement(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
 
-
 	void steepest_ascent(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
 
 	static std::unordered_map<string, pointer> lookup({
