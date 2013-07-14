@@ -13,8 +13,9 @@
 #include "Util.h"
 #include "HillClimb.h"
 #include "Configuration.h"
+#include "Optimizer.h"
 
-class Pyramid
+class Pyramid: public Optimizer
 {
 private:
 	vector<Population> pops;
@@ -23,10 +24,10 @@ private:
 	size_t length;
 public:
 	std::unordered_set<vector<bool>> seen;
-	Pyramid(size_t l): length(l) {}
-	virtual ~Pyramid() = default;
+	Pyramid(Configuration& config):
+		length(config.get<int>("length")) {}
 	void climb(Random& rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
-	void optimize(Random& rand, Evaluator& evaluator, Configuration& config);
+	void optimize(Random& rand, Evaluator& evaluator, Configuration& config) override;
 };
 
 #endif /* PYRAMID_H_ */

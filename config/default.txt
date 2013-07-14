@@ -1,5 +1,7 @@
 length 20 # Sets the number of bits in the problem
 hill_climber first_improvement # Which hill climber to use, "first_improvement" or "steepest_ascent"
-k 5
+optimizer Pyramid # Either "Pyramid" (P3) or "LTGA"
+trap_size 5
+step_size 2
 runs 10
 pop_size 20 # Only used for LTGA, not P3

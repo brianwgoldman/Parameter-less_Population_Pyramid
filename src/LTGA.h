@@ -13,8 +13,9 @@
 #include "Util.h"
 #include "HillClimb.h"
 #include "Configuration.h"
+#include "Optimizer.h"
 
-class LTGA
+class LTGA: public Optimizer
 {
 private:
 	size_t length;
@@ -31,10 +32,7 @@ public:
 		length(config.get<int>("length")),
 		pop_size(config.get<int>("pop_size")),
 		pop(config.get<int>("length")) {}
-	virtual ~LTGA() = default;
-
-	void optimize(Random& rand, Evaluator& evaluator, Configuration& config);
-
+	void optimize(Random& rand, Evaluator& evaluator, Configuration& config) override;
 };
 
 #endif /* LTGA_H_ */

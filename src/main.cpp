@@ -17,6 +17,7 @@ using namespace std;
 #include "Pyramid.h"
 #include "LTGA.h"
 #include "Configuration.h"
+#include "Optimizer.h"
 
 int main(int argc, char * argv[])
 {
@@ -35,10 +36,18 @@ int main(int argc, char * argv[])
 		Middle_Layer layer(evaluator);
 		//Pyramid pyramid(length);
 		//TODO MAKE CONFIGURABLE
-		LTGA pyramid(config);
+		Optimizer* optimizer;
+		if(config.get<string>("optimizer") == "LTGA")
+		{
+			optimizer = new LTGA(config);
+		}
+		else
+		{
+			optimizer = new Pyramid(config);
+		}
 
-		pyramid.optimize(rand, layer, config);
-
+		optimizer->optimize(rand, layer, config);
+		delete optimizer;
 		cout << layer.seen.size() << ' ' << layer.counter << endl;
 		cout << layer.best_fitness << ' ' << layer.best_found << endl;
 		total_evals += layer.best_found;
