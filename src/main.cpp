@@ -51,6 +51,7 @@ int main(int argc, char * argv[])
 		cout << layer.seen.size() << ' ' << layer.counter << endl;
 		cout << layer.best_fitness << ' ' << layer.best_found << endl;
 		total_evals += layer.best_found;
+		cout <<"Running " << total_evals / (run + 1.0) << " " << run+1 << endl;
 	}
 	cout << "TOTAL " << total_evals << " AVERAGE: " << total_evals / ((float)runs) << endl;
 	return 0;

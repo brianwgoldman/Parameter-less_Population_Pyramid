@@ -1,0 +1,3 @@
+hill_climber steepest_ascent
+optimizer LTGA
+pop_size 20 # Only used for LTGA, not P3
