@@ -14,7 +14,7 @@ void Pyramid::climb(Random& rand, vector<bool> & solution, float & fitness, Eval
 	{
 		//use population clusters and population solutions to make new solution
 		pops[level].improve(rand, solution, fitness, evaluator);
-		add_unique(rand, solution, level);
+		add_unique(rand, solution, level+1);
 	}
 }
 
