@@ -6,6 +6,7 @@
  */
 
 #include "Evaluation.h"
+using namespace std;
 
 float Evaluator::evaluate(const vector<bool> & solution)
 {
@@ -64,20 +65,82 @@ NearestNeighborNK::NearestNeighborNK(Configuration& config, int run_number)
 {
 	k = config.get<int>("k");
 	length = config.get<int>("length");
-	table.resize(length, vector<float>(2 << k, 0));
-
-	Random rand(config.get<int>("problem_seed") + run_number);
-	auto generator = std::uniform_real_distribution<>(0, 1);
-	for(auto& row: table)
-	{
-		for(auto& entry: row)
-		{
-			entry = generator(rand);
-		}
-	}
-	minimum = solve(worst, false);
-	maximum = solve(best, true);
 	precision = config.get<int>("precision");
+	table.resize(length, vector<float>(2 << k, 0));
+	int rng_seed = config.get<int>("problem_seed") + run_number;
+
+	// Build up the filename where this problem is stored
+	string filename = config.get<string>("problem_folder");
+	filename += + "/NearestNeighborNK_";
+	filename += config.get<string>("length") + "_";
+	filename += config.get<string>("k") + "_";
+	filename += to_string(rng_seed) + ".txt";
+
+	ifstream in(filename);
+	// If this problem has been tried before
+	if(in)
+	{
+		in >> minimum;
+		worst.resize(length);
+		string temp;
+		in >> temp;
+		for(int i=0; i < length; i++)
+		{
+			worst[i] = temp[i] == '1';
+		}
+
+		in >> maximum;
+		best.resize(length);
+		in >> temp;
+		for(int i=0; i < length; i++)
+		{
+			best[i] = temp[i] == '1';
+		}
+
+		for(auto& row: table)
+		{
+			for(auto& entry: row)
+			{
+				in >> entry;
+			}
+		}
+		in.close();
+	}
+	else
+	{
+		// Generate the new problem
+		Random rand(rng_seed);
+		auto generator = std::uniform_real_distribution<>(0, 1);
+		for(auto& row: table)
+		{
+			for(auto& entry: row)
+			{
+				entry = generator(rand);
+			}
+		}
+
+		// Find its minimum and maximum
+		minimum = solve(worst, false);
+		maximum = solve(best, true);
+
+		// Write it out to the file
+		ofstream out(filename);
+		out << minimum << " ";
+		print(worst, out);
+
+		out << maximum << " ";
+		print(best, out);
+
+		for(auto& row: table)
+		{
+			for(auto& entry: row)
+			{
+				out << entry << " ";
+			}
+			out << endl;
+		}
+		out.close();
+	}
 }
 
 float NearestNeighborNK::chunk_fitness(trimap& known, size_t chunk_index, size_t a, size_t b)
@@ -221,13 +284,7 @@ float NearestNeighborNK::evaluate(const vector<bool> & solution)
 		total += table[i][index];
 	}
 	float fitness = (total-minimum) / (maximum - minimum);
-	fitness = round(fitness * precision) / precision;
-	if(solution == best)
-	{
-		if(fitness < 1)
-		{
-			std::cout<<"YEP "<<fitness << std::endl;
-		}
-	}
-	return fitness;
+	// Ensures the best fitness actually gets 1.0
+	return round(fitness * precision) / precision;
+
 }

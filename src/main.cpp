@@ -18,6 +18,7 @@ using namespace std;
 #include "LTGA.h"
 #include "Configuration.h"
 #include "Optimizer.h"
+#include <memory>
 
 int main(int argc, char * argv[])
 {
@@ -35,20 +36,17 @@ int main(int argc, char * argv[])
 	{
 		NearestNeighborNK evaluator(config, run);
 		Middle_Layer layer(evaluator);
-		//Pyramid pyramid(length);
-		//TODO MAKE CONFIGURABLE
-		Optimizer* optimizer;
+		shared_ptr<Optimizer> optimizer;
 		if(config.get<string>("optimizer") == "LTGA")
 		{
-			optimizer = new LTGA(config);
+			optimizer = shared_ptr<Optimizer>(new LTGA(config));
 		}
 		else
 		{
-			optimizer = new Pyramid(config);
+			optimizer = shared_ptr<Optimizer>(new Pyramid(config));
 		}
 
 		optimizer->optimize(rand, layer, config);
-		delete optimizer;
 		cout << layer.seen.size() << ' ' << layer.counter << endl;
 		cout << layer.best_fitness << ' ' << layer.best_found << endl;
 		total_evals += layer.best_found;

@@ -8,3 +8,4 @@ problem_seed 0
 runs 10
 pop_size 20 # Only used for LTGA, not P3
 precision 10000
+problem_folder problem_files
