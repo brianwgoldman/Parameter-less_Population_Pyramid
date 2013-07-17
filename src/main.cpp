@@ -28,11 +28,12 @@ int main(int argc, char * argv[])
 	config.parse(argc, argv);
 
 	rand.seed(rd());
+
 	int runs = config.get<int>("runs");
-	DeceptiveStepTrap evaluator(config);
 	long int total_evals = 0;
 	for(int run=0; run < runs; run++)
 	{
+		NearestNeighborNK evaluator(config, run);
 		Middle_Layer layer(evaluator);
 		//Pyramid pyramid(length);
 		//TODO MAKE CONFIGURABLE
