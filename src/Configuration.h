@@ -13,6 +13,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <stdexcept>
 
 using std::unordered_map;
 using std::string;

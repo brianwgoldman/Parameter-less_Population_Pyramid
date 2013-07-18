@@ -71,7 +71,7 @@ NearestNeighborNK::NearestNeighborNK(Configuration& config, int run_number)
 
 	// Build up the filename where this problem is stored
 	string filename = config.get<string>("problem_folder");
-	filename += + "/NearestNeighborNK_";
+	filename += + "NearestNeighborNK_";
 	filename += config.get<string>("length") + "_";
 	filename += config.get<string>("k") + "_";
 	filename += to_string(rng_seed) + ".txt";

@@ -53,19 +53,24 @@ void Configuration::parse(char filename[])
 }
 
 template <>
+string Configuration::get(const string key)
+{
+	auto it = data.find(key);
+	if(it == data.end())
+	{
+		throw invalid_argument("No value specified for configuration option: " + key);
+	}
+	return it->second;
+}
+
+template <>
 int Configuration::get(const string key)
 {
-	return atoi(data[key].c_str());
+	return atoi(get<string>(key).c_str());
 }
 
 template <>
 float Configuration::get(const string key)
 {
-	return atof(data[key].c_str());
-}
-
-template <>
-string Configuration::get(const string key)
-{
-	return data[key];
+	return atof(get<string>(key).c_str());
 }
