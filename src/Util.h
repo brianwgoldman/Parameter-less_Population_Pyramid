@@ -15,7 +15,6 @@
 using std::vector;
 using Random=std::mt19937;
 
-
 vector<bool> rand_vector(Random& rand, const size_t length);
 
 void print(const vector<bool> & vect, std::ostream & out=std::cout);

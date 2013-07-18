@@ -14,10 +14,9 @@ using namespace std;
 #include "Util.h"
 #include "MiddleLayer.h"
 #include "Population.h"
-#include "Pyramid.h"
-#include "LTGA.h"
 #include "Configuration.h"
 #include "Optimizer.h"
+#include "OptimizationCollection.h"
 #include <memory>
 
 int main(int argc, char * argv[])
@@ -32,20 +31,12 @@ int main(int argc, char * argv[])
 
 	int runs = config.get<int>("runs");
 	long int total_evals = 0;
+	auto problem = config.get<evaluation::pointer>("problem");
+	auto optimizer_method = config.get<optimize::pointer>("optimizer");
 	for(int run=0; run < runs; run++)
 	{
-		auto problem = config.get<evaluation::pointer>("problem");
 		Middle_Layer layer(problem(config, run));
-		shared_ptr<Optimizer> optimizer;
-		if(config.get<string>("optimizer") == "LTGA")
-		{
-			optimizer = shared_ptr<Optimizer>(new LTGA(config));
-		}
-		else
-		{
-			optimizer = shared_ptr<Optimizer>(new Pyramid(config));
-		}
-
+		auto optimizer = optimizer_method(config);
 		optimizer->optimize(rand, layer, config);
 		cout << layer.seen.size() << ' ' << layer.counter << endl;
 		cout << layer.best_fitness << ' ' << layer.best_found << endl;

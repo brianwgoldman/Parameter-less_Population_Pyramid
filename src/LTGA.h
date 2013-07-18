@@ -33,6 +33,7 @@ public:
 		pop_size(config.get<int>("pop_size")),
 		pop(config.get<int>("length")) {}
 	void optimize(Random& rand, Evaluator& evaluator, Configuration& config) override;
+	create_optimizer(LTGA);
 };
 
 #endif /* LTGA_H_ */

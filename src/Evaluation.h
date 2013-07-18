@@ -20,6 +20,11 @@ using std::vector;
 using std::size_t;
 using std::shared_ptr;
 
+#define create_evaluator(name) static shared_ptr<Evaluator> create(Configuration& config, int run_number)\
+{\
+	return shared_ptr<Evaluator>(new name(config, run_number));\
+}
+
 class Evaluator
 {
 public:
@@ -36,10 +41,7 @@ public:
 	DeceptiveTrap(Configuration& config, int run_number):
 		trap_size(config.get<int>("trap_size")) {}
 	float evaluate(const vector<bool> & solution) override;
-	static shared_ptr<Evaluator> create(Configuration& config, int run_number)
-	{
-		return shared_ptr<Evaluator>(new DeceptiveTrap(config, run_number));
-	};
+	create_evaluator(DeceptiveTrap);
 };
 
 class DeceptiveStepTrap: public Evaluator
@@ -56,10 +58,7 @@ public:
 		{
 			offset = (trap_size-step_size) % step_size;
 		}
-	static shared_ptr<Evaluator> create(Configuration& config, int run_number)
-	{
-		return shared_ptr<Evaluator>(new DeceptiveStepTrap(config, run_number));
-	};
+	create_evaluator(DeceptiveStepTrap);
 	float evaluate(const vector<bool> & solution) override;
 };
 
@@ -85,11 +84,7 @@ public:
 	vector<bool> worst;
 	NearestNeighborNK(Configuration& config, int run_number);
 	float evaluate(const vector<bool> & solution) override;
-
-	static shared_ptr<Evaluator> create(Configuration& config, int run_number)
-	{
-		return shared_ptr<Evaluator>(new NearestNeighborNK(config, run_number));
-	};
+	create_evaluator(NearestNeighborNK);
 };
 
 namespace evaluation

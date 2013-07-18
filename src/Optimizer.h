@@ -11,6 +11,13 @@
 #include "Util.h"
 #include "Evaluation.h"
 #include "Configuration.h"
+#include <memory>
+using std::shared_ptr;
+
+#define create_optimizer(name) static shared_ptr<Optimizer> create(Configuration& config)\
+{\
+	return shared_ptr<Optimizer>(new name(config));\
+}
 
 class Optimizer
 {

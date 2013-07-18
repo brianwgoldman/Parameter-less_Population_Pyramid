@@ -28,6 +28,7 @@ public:
 		length(config.get<int>("length")) {}
 	void climb(Random& rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
 	void optimize(Random& rand, Evaluator& evaluator, Configuration& config) override;
+	create_optimizer(Pyramid);
 };
 
 #endif /* PYRAMID_H_ */
