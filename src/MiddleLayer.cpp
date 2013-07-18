@@ -17,7 +17,7 @@ float Middle_Layer::evaluate(const vector<bool>& solution)
 	}
 	else
 	{
-		float fitness = evaluator.evaluate(solution);
+		float fitness = evaluator->evaluate(solution);
 		seen[solution] = fitness;
 		if(best_fitness < fitness)
 		{

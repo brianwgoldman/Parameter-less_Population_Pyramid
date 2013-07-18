@@ -34,8 +34,8 @@ int main(int argc, char * argv[])
 	long int total_evals = 0;
 	for(int run=0; run < runs; run++)
 	{
-		NearestNeighborNK evaluator(config, run);
-		Middle_Layer layer(evaluator);
+		auto problem = config.get<evaluation::pointer>("problem");
+		Middle_Layer layer(problem(config, run));
 		shared_ptr<Optimizer> optimizer;
 		if(config.get<string>("optimizer") == "LTGA")
 		{

@@ -14,9 +14,11 @@
 #include "Util.h"
 #include <math.h>
 #include <fstream>
+#include <memory>
 
 using std::vector;
 using std::size_t;
+using std::shared_ptr;
 
 class Evaluator
 {
@@ -34,6 +36,10 @@ public:
 	DeceptiveTrap(Configuration& config, int run_number):
 		trap_size(config.get<int>("trap_size")) {}
 	float evaluate(const vector<bool> & solution) override;
+	static shared_ptr<Evaluator> create(Configuration& config, int run_number)
+	{
+		return shared_ptr<Evaluator>(new DeceptiveTrap(config, run_number));
+	};
 };
 
 class DeceptiveStepTrap: public Evaluator
@@ -50,6 +56,10 @@ public:
 		{
 			offset = (trap_size-step_size) % step_size;
 		}
+	static shared_ptr<Evaluator> create(Configuration& config, int run_number)
+	{
+		return shared_ptr<Evaluator>(new DeceptiveStepTrap(config, run_number));
+	};
 	float evaluate(const vector<bool> & solution) override;
 };
 
@@ -76,5 +86,21 @@ public:
 	NearestNeighborNK(Configuration& config, int run_number);
 	float evaluate(const vector<bool> & solution) override;
 
+	static shared_ptr<Evaluator> create(Configuration& config, int run_number)
+	{
+		return shared_ptr<Evaluator>(new NearestNeighborNK(config, run_number));
+	};
 };
+
+namespace evaluation
+{
+	using pointer=shared_ptr<Evaluator> (*)(Configuration &, int);
+	static std::unordered_map<string, pointer> lookup({
+		{"DeceptiveTrap", DeceptiveTrap::create},
+		{"DeceptiveStepTrap", DeceptiveStepTrap::create},
+		{"NearestNeighborNK", NearestNeighborNK::create},
+	});
+
+}
+
 #endif /* EVALUATION_H_ */

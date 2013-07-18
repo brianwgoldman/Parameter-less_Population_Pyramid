@@ -14,7 +14,7 @@
 class Middle_Layer: public Evaluator
 {
 protected:
-	Evaluator& evaluator;
+	shared_ptr<Evaluator> evaluator;
 
 public:
 	int counter;
@@ -22,7 +22,7 @@ public:
 	int best_found;
 	std::vector<bool> best_solution;
 	std::unordered_map<vector<bool>, float> seen;
-	Middle_Layer(Evaluator& evaler): evaluator(evaler), counter(0), best_fitness(0), best_found(0) {}
+	Middle_Layer(shared_ptr<Evaluator> evaler): evaluator(evaler), counter(0), best_fitness(0), best_found(0) {}
 	virtual float evaluate(const vector<bool> & solution) override;
 
 

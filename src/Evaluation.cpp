@@ -8,6 +8,12 @@
 #include "Evaluation.h"
 using namespace std;
 
+template <>
+evaluation::pointer Configuration::get(const string key)
+{
+	return evaluation::lookup[get<string>(key)];
+}
+
 float Evaluator::evaluate(const vector<bool> & solution)
 {
 	float sum = 0;
