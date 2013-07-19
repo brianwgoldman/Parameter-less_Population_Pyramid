@@ -13,6 +13,7 @@ CPP_SRCS += \
 ../src/Population.cpp \
 ../src/Pyramid.cpp \
 ../src/RandomRestartHC.cpp \
+../src/Record.cpp \
 ../src/Util.cpp \
 ../src/main.cpp 
 
@@ -26,6 +27,7 @@ OBJS += \
 ./src/Population.o \
 ./src/Pyramid.o \
 ./src/RandomRestartHC.o \
+./src/Record.o \
 ./src/Util.o \
 ./src/main.o 
 
@@ -39,6 +41,7 @@ CPP_DEPS += \
 ./src/Population.d \
 ./src/Pyramid.d \
 ./src/RandomRestartHC.d \
+./src/Record.d \
 ./src/Util.d \
 ./src/main.d 
 

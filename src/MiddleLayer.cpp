@@ -24,6 +24,7 @@ float Middle_Layer::evaluate(const vector<bool>& solution)
 			best_fitness = fitness;
 			best_solution = solution;
 			best_found = seen.size();
+			results.add(fitness, seen.size());
 		}
 		return fitness;
 	}

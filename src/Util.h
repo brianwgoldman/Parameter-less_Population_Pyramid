@@ -11,6 +11,7 @@
 #include <vector>
 #include <iostream>
 #include <random>
+#include <algorithm>
 
 using std::vector;
 using Random=std::mt19937;
@@ -20,5 +21,20 @@ vector<bool> rand_vector(Random& rand, const size_t length);
 void print(const vector<bool> & vect, std::ostream & out=std::cout);
 
 vector<int> indices(const size_t length);
+
+template <class T>
+T median(vector<T> data)
+{
+	auto middle = data.size() >> 1;
+	std::nth_element(data.begin(), data.begin() + middle, data.end());
+	auto result = data[middle];
+	// even length lists
+	if(!(data.size() & 1))
+	{
+		std::nth_element(data.begin(), data.begin() + middle-1, data.end());
+		result = (result + data[middle-1]) / 2;
+	}
+	return result;
+}
 
 #endif /* UTIL_H_ */

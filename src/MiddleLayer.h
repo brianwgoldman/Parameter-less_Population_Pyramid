@@ -10,6 +10,7 @@
 #include "Evaluation.h"
 #include <unordered_map>
 #include <stdexcept>
+#include "Record.h"
 
 class Middle_Layer: public Evaluator
 {
@@ -24,7 +25,7 @@ public:
 	std::unordered_map<vector<bool>, float> seen;
 	Middle_Layer(shared_ptr<Evaluator> evaler): evaluator(evaler), counter(0), best_fitness(0), best_found(0) {}
 	virtual float evaluate(const vector<bool> & solution) override;
-
+	Record results;
 
 };
 

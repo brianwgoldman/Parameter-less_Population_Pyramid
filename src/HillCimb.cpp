@@ -21,38 +21,27 @@ void hill_climb::first_improvement(Random & rand, vector<bool> & solution, float
 {
 	// set up data structure for random bit selection
 	auto options = indices(solution.size());
-
-	int unused = options.size()-1;
-	int index, working = 0;
 	float new_fitness;
-	bool improved;
-	// Loop as long as improvement is made
+	bool improvement;
 	do
 	{
-
-		improved = false;
-		while(unused >= 0 and not improved)
+		improvement = false;
+		std::shuffle(options.begin(), options.end(), rand);
+		for(const auto& index: options)
 		{
-			index = std::uniform_int_distribution<int>(0, unused)(rand);
-			working = options[index];
-			swap(options[unused], options[index]);
-			unused -= 1;
-			solution[working] = not solution[working];
+			solution[index] = not solution[index];
 			new_fitness = evaluator.evaluate(solution);
 			if(fitness < new_fitness)
 			{
 				fitness = new_fitness;
-				improved=true;
+				improvement = true;
 			}
 			else
 			{
-				solution[working] = not solution[working];
+				solution[index] = not solution[index];
 			}
 		}
-		// The index used to make this improvement isn't valid next time
-		swap(options[unused+1], options[options.size()-1]);
-		unused = options.size()-2;
-	} while(improved);
+	} while(improvement);
 }
 
 void hill_climb::steepest_ascent(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
@@ -92,4 +81,40 @@ void hill_climb::steepest_ascent(Random & rand, vector<bool> & solution, float &
 			bests.clear();
 		}
 	} while(improved);
+}
+
+void hill_climb::no_action(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
+{
+
+}
+
+void hill_climb::binary_tournament(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
+{
+	auto guess = rand_vector(rand, solution.size());
+	float guess_fitness = evaluator.evaluate(guess);
+	if(fitness < guess_fitness)
+	{
+		solution = guess;
+		fitness = guess_fitness;
+	}
+}
+
+void hill_climb::once_each(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
+{
+	auto options = indices(solution.size());
+	float new_fitness;
+	std::shuffle(options.begin(), options.end(), rand);
+	for(const auto& index: options)
+	{
+		solution[index] = not solution[index];
+		new_fitness = evaluator.evaluate(solution);
+		if(fitness < new_fitness)
+		{
+			fitness = new_fitness;
+		}
+		else
+		{
+			solution[index] = not solution[index];
+		}
+	}
 }
