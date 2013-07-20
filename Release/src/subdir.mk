@@ -6,6 +6,7 @@
 CPP_SRCS += \
 ../src/Configuration.cpp \
 ../src/Evaluation.cpp \
+../src/Experiments.cpp \
 ../src/HillCimb.cpp \
 ../src/LTGA.cpp \
 ../src/MiddleLayer.cpp \
@@ -20,6 +21,7 @@ CPP_SRCS += \
 OBJS += \
 ./src/Configuration.o \
 ./src/Evaluation.o \
+./src/Experiments.o \
 ./src/HillCimb.o \
 ./src/LTGA.o \
 ./src/MiddleLayer.o \
@@ -34,6 +36,7 @@ OBJS += \
 CPP_DEPS += \
 ./src/Configuration.d \
 ./src/Evaluation.d \
+./src/Experiments.d \
 ./src/HillCimb.d \
 ./src/LTGA.d \
 ./src/MiddleLayer.d \
