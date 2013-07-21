@@ -32,6 +32,12 @@ public:
 
 	template <class T>
 	T get(const string key);
+
+	template <class T>
+	void set(const string key, const T value)
+	{
+		data[key] = std::to_string(value);
+	}
 };
 
 

@@ -17,4 +17,6 @@
 
 vector<Record> multirun(Random& rand, Configuration& config, evaluation::pointer problem, optimize::pointer solver);
 
+int bisection(Random& rand, Configuration& config, evaluation::pointer problem, optimize::pointer solver);
+
 #endif /* EXPERIMENTS_H_ */

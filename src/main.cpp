@@ -32,8 +32,16 @@ int main(int argc, char * argv[])
 	rand.seed(rd());
 	auto problem = config.get<evaluation::pointer>("problem");
 	auto optimizer_method = config.get<optimize::pointer>("optimizer");
-	vector<Record> records = multirun(rand, config, problem, optimizer_method);
-	auto summary = Record::summarize(records);
-	cout << summary[MES] << " " << summary[MAD] << " " << summary[FAILURES] << endl;
+	if(config.get<string>("experiment") == "bisection")
+	{
+		int pop_size = bisection(rand, config, problem, optimizer_method);
+		cout <<"POP SIZE " << pop_size << endl;
+	}
+	else
+	{
+		vector<Record> records = multirun(rand, config, problem, optimizer_method);
+		auto summary = Record::summarize(records);
+		cout << summary[MES] << " " << summary[MAD] << " " << summary[FAILURES] << endl;
+	}
 	return 0;
 }
