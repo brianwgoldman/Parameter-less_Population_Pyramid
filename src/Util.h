@@ -12,6 +12,7 @@
 #include <iostream>
 #include <random>
 #include <algorithm>
+#include <sstream>
 
 using std::vector;
 using Random=std::mt19937;
@@ -35,6 +36,16 @@ T median(vector<T> data)
 		result = (result + data[middle-1]) / 2;
 	}
 	return result;
+}
+
+template <class T>
+T make_filable(const T entry)
+{
+	std::stringstream ss;
+	ss << entry;
+	T new_value;
+	ss >> new_value;
+	return new_value;
 }
 
 #endif /* UTIL_H_ */

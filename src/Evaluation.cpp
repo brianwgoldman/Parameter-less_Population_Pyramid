@@ -116,18 +116,19 @@ NearestNeighborNK::NearestNeighborNK(Configuration& config, int run_number)
 	{
 		// Generate the new problem
 		Random rand(rng_seed);
+
 		auto generator = std::uniform_real_distribution<>(0, 1);
 		for(auto& row: table)
 		{
 			for(auto& entry: row)
 			{
-				entry = generator(rand);
+				entry = make_filable(generator(rand));
 			}
 		}
 
 		// Find its minimum and maximum
-		minimum = solve(worst, false);
-		maximum = solve(best, true);
+		minimum = make_filable(solve(worst, false));
+		maximum = make_filable(solve(best, true));
 
 		// Write it out to the file
 		ofstream out(filename);

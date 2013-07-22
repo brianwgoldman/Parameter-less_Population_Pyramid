@@ -19,6 +19,7 @@ vector<Record> multirun(Random& rand, Configuration& config, evaluation::pointer
 		records.push_back(layer.results);
 		auto summary = Record::summarize(records);
 		std::cout << "Run: " << run
+				<< " Evals: " << layer.results.best().second
 				<< " MES: " << summary[MES]
 			    << " MAD: " << summary[MAD]
 			    << " FAILURES: " << summary[FAILURES] << std::endl;
