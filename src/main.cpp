@@ -24,12 +24,16 @@ using namespace std;
 int main(int argc, char * argv[])
 {
 	Random rand;
-	std::random_device rd;
-
 	Configuration config;
 	config.parse(argc, argv);
-
-	rand.seed(rd());
+	int seed = config.get<int>("seed");
+	if(seed == -1)
+	{
+		std::random_device rd;
+		seed = rd();
+		config.set("seed", seed);
+	}
+	rand.seed(seed);
 	auto problem = config.get<evaluation::pointer>("problem");
 	auto optimizer_method = config.get<optimize::pointer>("optimizer");
 	if(config.get<string>("experiment") == "bisection")

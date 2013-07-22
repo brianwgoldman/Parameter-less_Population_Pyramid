@@ -292,5 +292,4 @@ float NearestNeighborNK::evaluate(const vector<bool> & solution)
 	float fitness = (total-minimum) / (maximum - minimum);
 	// Ensures the best fitness actually gets 1.0
 	return round(fitness * precision) / precision;
-
 }

@@ -11,3 +11,4 @@ pop_size 20 # Only used for LTGA, not P3
 precision 10000
 problem_folder problem_files/
 experiment multirun
+seed -1
