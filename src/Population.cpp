@@ -106,12 +106,13 @@ void Population::rebuild_tree(Random& rand)
 	float min_value;
 	int choice;
 
-	unordered_map<int, unordered_map<int, float> > distances;
+	vector<vector<float> > distances(clusters.size(), vector<float>(clusters.size(), -1));
 	for(size_t i=0; i < length - 1; i++)
 	{
 		for(size_t j=i + 1; j < length; j++)
 		{
 			distances[i][j] = get_distance(clusters[i], clusters[j]);
+			distances[j][i] = distances[i][j];
 		}
 	}
 
@@ -127,10 +128,6 @@ void Population::rebuild_tree(Random& rand)
 			{
 				auto x = *i;
 				auto y = *j;
-				if(x > y)
-				{
-					std::swap(x, y);
-				}
 				float distance = distances[x][y];
 				if(distance <= min_value)
 				{
@@ -139,7 +136,7 @@ void Population::rebuild_tree(Random& rand)
 						min_value = distance;
 						minimums.clear();
 					}
-					minimums.push_back(pair<int, int>(*i, *j));
+					minimums.push_back(pair<int, int>(x, y));
 				}
 			}
 		}
@@ -158,36 +155,14 @@ void Population::rebuild_tree(Random& rand)
 		for(auto i=usable.begin(); i != usable.end(); i++)
 		{
 			auto x = *i;
-			float first_distance;
-			float second_distance;
-			if(x > first)
-			{
-				first_distance = distances[first][x];
-			}
-			else
-			{
-				first_distance = distances[x][first];
-				distances[x].erase(first);
-			}
-
+			float first_distance = distances[first][x];
 			first_distance *= clusters[first].size();
-			if(x > second)
-			{
-				second_distance = distances[second][x];
-			}
-			else
-			{
-				second_distance = distances[x][second];
-				distances[x].erase(first);
-			}
-
+			float second_distance = distances[second][x];
 			second_distance *= clusters[second].size();
 			distances[x][index] = ((first_distance + second_distance) /
 						   (clusters[first].size() + clusters[second].size()));
-
+			distances[index][x] = distances[x][index];
 		}
-		distances.erase(first);
-		distances.erase(second);
 		usable.insert(index);
 	}
 }
