@@ -21,14 +21,14 @@ using std::array;
 enum RecordKey {MES, MAD, FAILURES};
 
 class Record {
-private:
-	vector<pair<float, int>> levels;
 public:
 	Record() = default;
 	virtual ~Record() = default;
 	void add(float fitness, int evals);
 	const pair<float, int>& best() const;
 	static array<int, 3> summarize(const vector<Record>& records);
+
+	vector<pair<float, int>> levels;
 };
 
 #endif /* RECORD_H_ */

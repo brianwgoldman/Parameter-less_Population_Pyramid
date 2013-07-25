@@ -41,11 +41,25 @@ int main(int argc, char * argv[])
 		int pop_size = bisection(rand, config, problem, optimizer_method);
 		cout <<"POP SIZE " << pop_size << endl;
 	}
-	else
+	else if(config.get<string>("experiment") == "multirun")
 	{
 		vector<Record> records = multirun(rand, config, problem, optimizer_method);
 		auto summary = Record::summarize(records);
 		cout << summary[MES] << " " << summary[MAD] << " " << summary[FAILURES] << endl;
+		int total = 0;
+		for(const auto& record: records)
+		{
+			total += record.best().second;
+		}
+		cout <<"Total: " << total << endl;
+	}
+	else
+	{
+		Record record = single_run(rand, config, problem, optimizer_method, 0);
+		for(const auto& line: record.levels)
+		{
+			cout << line.first <<" " << line.second << endl;
+		}
 	}
 	return 0;
 }

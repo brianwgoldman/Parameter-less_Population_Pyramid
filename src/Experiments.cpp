@@ -7,19 +7,24 @@
 
 #include "Experiments.h"
 
+Record single_run(Random& rand, Configuration& config, evaluation::pointer problem, optimize::pointer solver, int run)
+{
+	Middle_Layer layer(problem(config, run));
+	auto optimizer = solver(config);
+	optimizer->optimize(rand, layer, config);
+	return layer.results;
+}
+
 vector<Record> multirun(Random& rand, Configuration& config, evaluation::pointer problem, optimize::pointer solver)
 {
 	int runs = config.get<int>("runs");
 	vector<Record> records;
 	for(int run=0; run < runs; run++)
 	{
-		Middle_Layer layer(problem(config, run));
-		auto optimizer = solver(config);
-		optimizer->optimize(rand, layer, config);
-		records.push_back(layer.results);
+		records.push_back(single_run(rand, config, problem, solver, run));
 		auto summary = Record::summarize(records);
 		std::cout << "Run: " << run
-				<< " Evals: " << layer.results.best().second
+				<< " Evals: " << records[records.size()-1].best().second
 				<< " MES: " << summary[MES]
 			    << " MAD: " << summary[MAD]
 			    << " FAILURES: " << summary[FAILURES] << std::endl;
