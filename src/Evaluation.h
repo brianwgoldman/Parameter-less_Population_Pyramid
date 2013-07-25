@@ -87,6 +87,15 @@ public:
 	create_evaluator(NearestNeighborNK);
 };
 
+class LeadingOnes: public Evaluator
+{
+public:
+	LeadingOnes(Configuration& config, int run_number) {}
+	float evaluate(const vector<bool> & solution) override;
+	create_evaluator(LeadingOnes);
+};
+
+
 namespace evaluation
 {
 	using pointer=shared_ptr<Evaluator> (*)(Configuration &, int);
@@ -94,6 +103,7 @@ namespace evaluation
 		{"DeceptiveTrap", DeceptiveTrap::create},
 		{"DeceptiveStepTrap", DeceptiveStepTrap::create},
 		{"NearestNeighborNK", NearestNeighborNK::create},
+		{"LeadingOnes", LeadingOnes::create},
 	});
 
 }

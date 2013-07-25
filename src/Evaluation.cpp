@@ -294,3 +294,15 @@ float NearestNeighborNK::evaluate(const vector<bool> & solution)
 	// Ensures the best fitness actually gets 1.0
 	return round(fitness * precision) / precision;
 }
+
+float LeadingOnes::evaluate(const vector<bool> & solution)
+{
+	for(size_t i=0; i < solution.size(); i++)
+	{
+		if(not solution[i])
+		{
+			return float(i) / solution.size();
+		}
+	}
+	return 1;
+}
