@@ -8,7 +8,8 @@ k 5
 problem_seed 0
 runs 10
 pop_size 20 # Only used for LTGA, not P3
-precision 10000
+precision 65536
 problem_folder problem_files/
 experiment multirun
 seed -1
+verbosity 1

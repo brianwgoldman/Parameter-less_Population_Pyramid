@@ -9,7 +9,7 @@
 
 Record single_run(Random& rand, Configuration& config, evaluation::pointer problem, optimize::pointer solver, int run)
 {
-	Middle_Layer layer(problem(config, run));
+	Middle_Layer layer(config, problem(config, run));
 	auto optimizer = solver(config);
 	optimizer->optimize(rand, layer, config);
 	return layer.results;
@@ -51,7 +51,7 @@ int bisection(Random& rand, Configuration& config, evaluation::pointer problem, 
 		{
 			int problem_number = ((i + failed_on) % runs);
 			std::cout <<"\tTrying problem: " << problem_number << std:: endl;
-			Middle_Layer layer(problem(config, problem_number));
+			Middle_Layer layer(config, problem(config, problem_number));
 			solver(config)->optimize(rand, layer, config);
 			if(layer.results.best().first < 1)
 			{
@@ -73,7 +73,7 @@ int bisection(Random& rand, Configuration& config, evaluation::pointer problem, 
 		{
 			int problem_number = ((i + failed_on) % runs);
 			std::cout <<"\tTrying problem: " << problem_number << std:: endl;
-			Middle_Layer layer(problem(config, problem_number));
+			Middle_Layer layer(config, problem(config, problem_number));
 			solver(config)->optimize(rand, layer, config);
 			if(layer.results.best().first < 1)
 			{

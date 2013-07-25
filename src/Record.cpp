@@ -9,6 +9,10 @@
 
 void Record::add(float fitness, int evals)
 {
+	if(verbosity > 0)
+	{
+		std::cout << fitness << "\t" << evals << std::endl;
+	}
 	levels.push_back(pair<float, int>(fitness, evals));
 }
 

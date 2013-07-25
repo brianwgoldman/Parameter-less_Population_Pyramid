@@ -23,7 +23,7 @@ public:
 	int best_found;
 	std::vector<bool> best_solution;
 	std::unordered_map<vector<bool>, float> seen;
-	Middle_Layer(shared_ptr<Evaluator> evaler): evaluator(evaler), counter(0), best_fitness(0), best_found(0) {}
+	Middle_Layer(Configuration& config, shared_ptr<Evaluator> evaler);
 	virtual float evaluate(const vector<bool> & solution) override;
 	Record results;
 

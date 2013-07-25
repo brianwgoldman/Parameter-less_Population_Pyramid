@@ -7,6 +7,12 @@
 
 #include "MiddleLayer.h"
 
+Middle_Layer::Middle_Layer(Configuration& config, shared_ptr<Evaluator> evaler):
+   evaluator(evaler), counter(0), best_fitness(0), best_found(0), results(config)
+{
+
+}
+
 float Middle_Layer::evaluate(const vector<bool>& solution)
 {
 	counter ++;
