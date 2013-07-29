@@ -22,10 +22,11 @@ private:
 
 	bool add_unique(Random& rand, const vector<bool> & solution, size_t level);
 	size_t length;
+	Configuration config;
 public:
 	std::unordered_set<vector<bool>> seen;
-	Pyramid(Configuration& config):
-		length(config.get<int>("length")) {}
+	Pyramid(Configuration& _config):
+		length(_config.get<int>("length")) {config = _config;}
 	void climb(Random& rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
 	void optimize(Random& rand, Evaluator& evaluator, Configuration& config) override;
 	create_optimizer(Pyramid);

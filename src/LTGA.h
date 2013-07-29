@@ -25,13 +25,14 @@ private:
 	std::unordered_set<vector<bool>> construct_set(float& fitness);
 	void initialize(Random& rand, Evaluator& evaluator, hill_climb::pointer hc);
 	void generation(Random& rand, Evaluator& evaluator);
+	Configuration config;
 
 public:
 	std::unordered_set<vector<bool>> previous_set;
-	LTGA(Configuration& config):
-		length(config.get<int>("length")),
-		pop_size(config.get<int>("pop_size")),
-		pop(config.get<int>("length")) {}
+	LTGA(Configuration& _config):
+		length(_config.get<int>("length")),
+		pop_size(_config.get<int>("pop_size")),
+		pop(_config) {config = _config;}
 	void optimize(Random& rand, Evaluator& evaluator, Configuration& config) override;
 	create_optimizer(LTGA);
 };

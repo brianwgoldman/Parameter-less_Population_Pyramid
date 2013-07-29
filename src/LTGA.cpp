@@ -23,9 +23,8 @@ void LTGA::initialize(Random & rand, Evaluator & evaluator, hill_climb::pointer 
 void LTGA::generation(Random& rand, Evaluator& evaluator)
 {
 	pop.rebuild_tree(rand);
-	pop.rand_smallest_first(rand);
 	float fitness;
-	Population next_generation(length);
+	Population next_generation(config);
 	for(auto solution: pop.solutions)
 	{
 		fitness = fitnesses[solution];

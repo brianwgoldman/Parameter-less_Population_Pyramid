@@ -24,8 +24,7 @@ bool Pyramid::add_unique(Random& rand, const vector<bool> & solution, size_t lev
 	{
 		if(pops.size() == level)
 		{
-			pops.push_back(Population(length));
-			pops[level].never_use_singletons();
+			pops.push_back(Population(config));
 		}
 		pops[level].add(solution);
 		pops[level].rebuild_tree(rand);

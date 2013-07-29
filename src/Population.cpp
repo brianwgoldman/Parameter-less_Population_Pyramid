@@ -9,9 +9,9 @@
 #include <iostream>
 using namespace std;
 
-Population::Population(int l)
+Population::Population(Configuration& config)
 {
-	length = l;
+	length = config.get<int>("length");
 	clusters.resize(2*length - 1);
 	cluster_ordering.resize(clusters.size());
 	for(size_t i = 0; i < length; i++)
@@ -22,6 +22,9 @@ Population::Population(int l)
 	{
 		cluster_ordering[i] = i;
 	}
+	builder = builder_lookup[config.get<string>("tree_builder")];
+	ordering = ordering_lookup[config.get<string>("cluster_ordering")];
+	no_singles = config.get<int>("no_singles");
 }
 
 void Population::add(const vector<bool> & solution)
@@ -80,81 +83,99 @@ float Population::get_distance(int x, int y)
 	return pairwise_distance[x][y];
 }
 
-float Population::get_distance(const vector<int> & c1, const vector<int> & c2)
+bool Population::minimize(const vector<vector<float>> & distances, const vector<size_t>& usable, const size_t& first, size_t & second)
 {
-	float distance = 0;
-	for(int x: c1)
+	float min_value = distances[first][second];
+	bool change = false;
+	for(const auto i: usable)
 	{
-		for(int y: c2)
+		if(distances[first][i] < min_value and i != first)
 		{
-			distance += get_distance(x, y);
+			change = true;
+			min_value = distances[first][i];
+			second = i;
 		}
 	}
-	return distance / (c1.size() * c2.size());
+	return change;
+}
+
+void Population::new_way(Random& rand, const vector<vector<float>> & distances, vector<size_t>& usable, size_t& first, size_t & second)
+{
+	std::shuffle(usable.begin(), usable.end(), rand);
+	first = *usable.begin();
+	second = *next(usable.begin());
+	while(minimize(distances, usable, first, second))
+	{
+		swap(first, second);
+		std::shuffle(usable.begin(), usable.end(), rand);
+	}
+}
+
+void Population::old_way(Random& rand, const vector<vector<float>> & distances, vector<size_t>& usable, size_t& first, size_t & second)
+{
+	float min_value=3;
+	vector<pair<int, int> > minimums;
+	// for all pairs of clusters
+	for(auto i=usable.begin(); i != usable.end(); i++)
+	{
+		for(auto j=next(i); j != usable.end(); j++)
+		{
+			auto x = *i;
+			auto y = *j;
+			float distance = distances[x][y];
+			if(distance <= min_value)
+			{
+				if(distance < min_value)
+				{
+					min_value = distance;
+					minimums.clear();
+				}
+				minimums.push_back(pair<int, int>(x, y));
+			}
+		}
+	}
+	// select a minimum at random
+	int choice = std::uniform_int_distribution<int>(0, minimums.size()-1)(rand);
+	first = minimums[choice].first;
+	second = minimums[choice].second;
 }
 
 void Population::rebuild_tree(Random& rand)
 {
-	unordered_set<size_t> usable;
-	for(size_t i=0; i < length; i++)
-	{
-		usable.insert(i);
-	}
+	vector<size_t> usable(length);
+	std::iota(usable.begin(), usable.end(), 0);
 	// shuffle the single variable clusters
-	shuffle(clusters.begin(), next(clusters.begin(), length), rand);
-	vector<pair<int, int> > minimums;
-	float min_value;
-	int choice;
+	shuffle(clusters.begin(), clusters.begin() + length, rand);
 
 	vector<vector<float> > distances(clusters.size(), vector<float>(clusters.size(), -1));
 	for(size_t i=0; i < length - 1; i++)
 	{
 		for(size_t j=i + 1; j < length; j++)
 		{
-			distances[i][j] = get_distance(clusters[i], clusters[j]);
+			distances[i][j] = get_distance(clusters[i][0], clusters[j][0]);
 			distances[j][i] = distances[i][j];
 		}
 	}
-
+	size_t first, second;
 	// rebuild all clusters after the single variable clusters
 	for(size_t index=length; index < clusters.size(); index++)
 	{
-		min_value=3;
-		minimums.clear();
-		// for all pairs of clusters
-		for(auto i=usable.begin(); i != usable.end(); i++)
-		{
-			for(auto j=next(i); j != usable.end(); j++)
-			{
-				auto x = *i;
-				auto y = *j;
-				float distance = distances[x][y];
-				if(distance <= min_value)
-				{
-					if(distance < min_value)
-					{
-						min_value = distance;
-						minimums.clear();
-					}
-					minimums.push_back(pair<int, int>(x, y));
-				}
-			}
-		}
-		// select a minimum at random
-		choice = std::uniform_int_distribution<int>(0, minimums.size()-1)(rand);
-		size_t first = minimums[choice].first;
-		size_t second = minimums[choice].second;
-
+		builder(rand, distances, usable, first, second);
 		// create new cluster
 		clusters[index] = clusters[first];
 		clusters[index].insert(clusters[index].end(),
 				clusters[second].begin(), clusters[second].end());
-		usable.erase(first);
-		usable.erase(second);
-
-		for(auto i=usable.begin(); i != usable.end(); i++)
+		int i = 0;
+		int end = usable.size() - 1;
+		while(i <= end)
 		{
-			auto x = *i;
+			auto x = usable[i];
+			if(x == first or x == second)
+			{
+				swap(usable[i], usable[end]);
+				end--;
+				continue;
+			}
 			float first_distance = distances[first][x];
 			first_distance *= clusters[first].size();
 			float second_distance = distances[second][x];
@@ -162,9 +183,18 @@ void Population::rebuild_tree(Random& rand)
 			distances[x][index] = ((first_distance + second_distance) /
 						   (clusters[first].size() + clusters[second].size()));
 			distances[index][x] = distances[x][index];
+			i++;
 		}
-		usable.insert(index);
+		usable.pop_back();
+		usable.back() = index;
 	}
+	cluster_ordering.resize(clusters.size());
+	std::iota(cluster_ordering.begin(), cluster_ordering.end(), 0);
+	if(no_singles)
+	{
+		never_use_singletons();
+	}
+	ordering(rand, clusters, cluster_ordering);
 }
 
 bool Population::donate(vector<bool> & solution, float & fitness, vector<bool> & source, const vector<int> & cluster, Evaluator& evaluator)
@@ -240,10 +270,20 @@ void Population::never_use_singletons()
 	}
 }
 
-void Population::rand_smallest_first(Random& rand)
+void Population::smallest_first(Random& rand, const vector<vector<int>>& clusters, vector<int>& cluster_ordering)
 {
 	// NOTE: My previous work did not shuffle here
 	std::shuffle(cluster_ordering.begin(), cluster_ordering.end(), rand);
-	auto smallest = [this](int x, int y) { return clusters[x].size() < clusters[y].size(); };
-	std::stable_sort(cluster_ordering.begin(), cluster_ordering.end(), smallest);
+	std::stable_sort(cluster_ordering.begin(), cluster_ordering.end(),
+			[clusters](int x, int y) { return clusters[x].size() < clusters[y].size();});
+}
+
+void Population::no_action(Random& rand, const vector<vector<int>>& clusters, vector<int>& cluster_ordering)
+{
+
+}
+
+void Population::random(Random& rand, const vector<vector<int>>& clusters, vector<int>& cluster_ordering)
+{
+	std::shuffle(cluster_ordering.begin(), cluster_ordering.end(), rand);
 }
