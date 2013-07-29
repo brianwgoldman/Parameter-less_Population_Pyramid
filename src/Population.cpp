@@ -278,6 +278,12 @@ void Population::smallest_first(Random& rand, const vector<vector<int>>& cluster
 			[clusters](int x, int y) { return clusters[x].size() < clusters[y].size();});
 }
 
+void Population::least_linked_first(Random& rand, const vector<vector<int>>& clusters, vector<int>& cluster_ordering)
+{
+	std::reverse(cluster_ordering.begin(), cluster_ordering.end());
+}
+
+
 void Population::no_action(Random& rand, const vector<vector<int>>& clusters, vector<int>& cluster_ordering)
 {
 

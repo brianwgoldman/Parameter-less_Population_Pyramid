@@ -53,10 +53,12 @@ private:
 	static void no_action(Random& rand, const vector<vector<int>>& clusters, vector<int>& cluster_ordering);
 	static void smallest_first(Random& rand, const vector<vector<int>>& clusters, vector<int>& cluster_ordering);
 	static void random(Random& rand, const vector<vector<int>>& clusters, vector<int>& cluster_ordering);
+	static void least_linked_first(Random& rand, const vector<vector<int>>& clusters, vector<int>& cluster_ordering);
 	std::unordered_map<string, cluster_ordering_method> ordering_lookup = {
 			{"no_action", no_action},
 			{"smallest_first", smallest_first},
 			{"random", random},
+			{"least_linked_first", least_linked_first},
 	};
 
 	bool no_singles;
