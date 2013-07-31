@@ -8,7 +8,6 @@
 #ifndef MIDDLELAYER_H_
 #define MIDDLELAYER_H_
 #include "Evaluation.h"
-#include <unordered_map>
 #include <stdexcept>
 #include "Record.h"
 
@@ -22,7 +21,6 @@ public:
 	float best_fitness;
 	int best_found;
 	std::vector<bool> best_solution;
-	std::unordered_map<vector<bool>, float> seen;
 	Middle_Layer(Configuration& config, shared_ptr<Evaluator> evaler);
 	virtual float evaluate(const vector<bool> & solution) override;
 	Record results;
