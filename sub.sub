@@ -2,10 +2,17 @@
 #PBS -l walltime=04:00:00
 #PBS -j oe
 #PBS -N NAME
-#PBS -o /mnt/scratch/goldma72/${PBS_JOBNAME}.tmp
+#PBS -o /mnt/scratch/goldma72/NAME_${PBS_JOBID}.tmp
 
-## Put pypy into the path
+# Required by C++11
+module load GNU/4.7.1
+
 cd ${PBS_O_WORKDIR}
 
+# Runs the correct job
 python scheduler.py ARGUMENTS
-qsub NAME/sub.sub
+
+if [ ! -f NAME/result.txt ]
+then
+	qsub NAME/sub.sub
+fi
