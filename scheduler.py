@@ -2,8 +2,8 @@ import sys
 import glob
 from os import path, remove
 from subprocess import call
-
 import signal
+import time
 
 def signal_handler(signal, frame):
         raise Exception('Signal received, exiting')
@@ -55,6 +55,7 @@ def start_run(folder, repeats, pop_size):
                 remove(filename + ".start")
             return
     print "RUNS INCOMPLETE"
+    time.sleep(10)
 
 
 while True:
