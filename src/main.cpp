@@ -27,6 +27,7 @@ int main(int argc, char * argv[])
 	Configuration config;
 	config.parse(argc, argv);
 	int seed = config.get<int>("seed");
+	string outfile = config.get<string>("outfile");
 	if(seed == -1)
 	{
 		std::random_device rd;
@@ -56,10 +57,12 @@ int main(int argc, char * argv[])
 	else
 	{
 		Record record = single_run(rand, config, problem, optimizer_method, 0);
+		ofstream out(outfile.c_str());
 		for(const auto& line: record.levels)
 		{
-			cout << line.first <<" " << line.second << endl;
+			out << line.first <<" " << line.second << endl;
 		}
+		out.close();
 	}
 	return 0;
 }

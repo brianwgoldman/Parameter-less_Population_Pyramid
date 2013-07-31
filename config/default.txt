@@ -16,3 +16,4 @@ verbosity 1
 tree_builder new_way
 cluster_ordering no_action
 no_singles 1
+outfile output.dat
