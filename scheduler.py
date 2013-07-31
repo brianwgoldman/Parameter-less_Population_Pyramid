@@ -16,6 +16,11 @@ except (IOError, ValueError):
     least, most, maxed = 0, 1, 0
 
 
+def update(least, most, maxed):
+    with open(bound_file, 'w') as f:
+        f.write("%i %i %i\n" % (least, most, maxed))
+
+
 def examine_results(folder, repeats, pop_size):
     successes = 0
     for i in range(repeats):
@@ -53,8 +58,10 @@ while maxed == 0:
     if status == "failed":
         least = most
         most *= 2
+        update(least, most, maxed)
     elif status == "finished":
         maxed = 1
+        update(least, most, maxed)
     else:  # incomplete
         start_run(folder, repeats, pop_size)
         break
@@ -65,14 +72,13 @@ while maxed > 0 and least + 1 < most:
     status = examine_results(folder, repeats, pop_size)
     if status == "failed":
         least = pop_size
+        update(least, most, maxed)
     elif status == "finished":
         most = pop_size
+        update(least, most, maxed)
     else:  # incomplete
         start_run(folder, repeats, pop_size)
         break
-
-with open(bound_file, 'w') as f:
-    f.write("%i %i %i\n" % (least, most, maxed))
 
 if maxed != 0 and least + 1 == most:
     with open(path.join(folder, "result.txt"), 'w') as f:
