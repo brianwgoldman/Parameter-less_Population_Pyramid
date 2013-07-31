@@ -10,7 +10,7 @@ module load GNU/4.7.1
 cd ${PBS_O_WORKDIR}
 
 # Runs the correct job
-python scheduler.py ARGUMENTS
+timeout -s SIGINT 14000 python scheduler.py ARGUMENTS
 
 if [ ! -f NAME/result.txt ]
 then
