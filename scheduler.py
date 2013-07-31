@@ -49,9 +49,10 @@ def start_run(folder, repeats, pop_size):
             try:
                 call(combined.split())
             except Exception as e:
-                remove(filename + ".start")
                 print e
                 sys.exit()
+            finally:
+                remove(filename + ".start")
             return
     print "RUNS INCOMPLETE"
 
