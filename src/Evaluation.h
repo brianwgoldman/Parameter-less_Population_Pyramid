@@ -37,9 +37,12 @@ class DeceptiveTrap: public Evaluator
 {
 private:
 	int trap_size;
+	int precision;
+
 public:
 	DeceptiveTrap(Configuration& config, int run_number):
-		trap_size(config.get<int>("trap_size")) {}
+		trap_size(config.get<int>("trap_size")),
+		precision(config.get<int>("precision")) {}
 	float evaluate(const vector<bool> & solution) override;
 	create_evaluator(DeceptiveTrap);
 };

@@ -42,7 +42,7 @@ float DeceptiveTrap::evaluate(const vector<bool> & solution)
 		}
 		total += partial;
 	}
-	return float(total) / solution.size();
+	return float_round(float(total) / solution.size(), precision);
 }
 
 float DeceptiveStepTrap::evaluate(const vector<bool> & solution)
