@@ -50,11 +50,13 @@ private:
 	int trap_size;
 	int step_size;
 	int offset;
+	int precision;
 
 public:
 	DeceptiveStepTrap(Configuration& config, int run_number):
 		trap_size(config.get<int>("trap_size")),
-		step_size(config.get<int>("step_size"))
+		step_size(config.get<int>("step_size")),
+		precision(config.get<int>("precision"))
 		{
 			offset = (trap_size-step_size) % step_size;
 		}

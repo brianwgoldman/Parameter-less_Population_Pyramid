@@ -29,15 +29,8 @@ void print(const vector<bool> & vect, std::ostream & out)
 
 }
 
-vector<int> indices(const size_t length)
+float float_round(float value, int precision)
 {
-	vector<int> vect(length, 0);
-	for(size_t i=0; i < vect.size(); i++)
-	{
-		vect[i] = i;
-	}
-	return vect;
+	return round(value * precision) / precision;
 }
-
-
 

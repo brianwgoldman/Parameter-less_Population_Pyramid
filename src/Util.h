@@ -21,7 +21,7 @@ vector<bool> rand_vector(Random& rand, const size_t length);
 
 void print(const vector<bool> & vect, std::ostream & out=std::cout);
 
-vector<int> indices(const size_t length);
+float float_round(float value, int precision);
 
 template <class T>
 T median(vector<T> data)

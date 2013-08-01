@@ -234,7 +234,8 @@ bool Population::donate(vector<bool> & solution, float & fitness, vector<bool> &
 
 void Population::improve(Random& rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
 {
-	auto options = indices(solutions.size());
+	vector<int> options(solutions.size());
+	iota(options.begin(), options.end(), 0);
 	int unused;
 	int index, working = 0;
 	bool different;

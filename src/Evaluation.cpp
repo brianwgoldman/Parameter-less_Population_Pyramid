@@ -64,7 +64,8 @@ float DeceptiveStepTrap::evaluate(const vector<bool> & solution)
 		}
 		total += (offset + partial) / step_size;
 	}
-	return (float(total) * trap_size) / (solution.size() * trap_maximum);
+	float fitness = (float(total) * trap_size) / (solution.size() * trap_maximum);
+	return float_round(fitness, precision);
 }
 
 NearestNeighborNK::NearestNeighborNK(Configuration& config, int run_number)
@@ -292,7 +293,7 @@ float NearestNeighborNK::evaluate(const vector<bool> & solution)
 	}
 	float fitness = (total-minimum) / (maximum - minimum);
 	// Ensures the best fitness actually gets 1.0
-	return round(fitness * precision) / precision;
+	return float_round(fitness, precision);
 }
 
 float LeadingOnes::evaluate(const vector<bool> & solution)

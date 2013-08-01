@@ -20,7 +20,8 @@ hill_climb::pointer Configuration::get(const string key)
 void hill_climb::first_improvement(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
 {
 	// set up data structure for random bit selection
-	auto options = indices(solution.size());
+	vector<int> options(solution.size());
+	iota(options.begin(), options.end(), 0);
 	float new_fitness;
 	bool improvement;
 	do
@@ -101,7 +102,8 @@ void hill_climb::binary_tournament(Random & rand, vector<bool> & solution, float
 
 void hill_climb::once_each(Random & rand, vector<bool> & solution, float & fitness, Evaluator& evaluator)
 {
-	auto options = indices(solution.size());
+	vector<int> options(solution.size());
+	iota(options.begin(), options.end(), 0);
 	float new_fitness;
 	std::shuffle(options.begin(), options.end(), rand);
 	for(const auto& index: options)
