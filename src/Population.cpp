@@ -157,10 +157,43 @@ void Population::rebuild_tree(Random& rand)
 		}
 	}
 	size_t first, second;
+	size_t final, best_index;
+	size_t end_of_path = 0;
 	// rebuild all clusters after the single variable clusters
 	for(size_t index=length; index < clusters.size(); index++)
 	{
-		builder(rand, distances, usable, first, second);
+		std::shuffle(usable.begin() + end_of_path, usable.end(), rand);
+		// if nothing in the path, just add a random usable node
+		if(end_of_path == 0)
+		{
+			end_of_path++;
+		}
+		while(end_of_path < usable.size())
+		{
+			final = usable[end_of_path-1];
+			// index stores the location of the best thing in usable
+			best_index = end_of_path;
+			float min_dist = distances[final][usable[best_index]];
+			for(size_t option=end_of_path + 1; option < usable.size(); option++)
+			{
+				if(distances[final][usable[option]] < min_dist)
+				{
+					min_dist = distances[final][usable[option]];
+					best_index = option;
+				}
+			}
+			// If the current last two are minimally distant
+			if(end_of_path > 1 and
+					min_dist >= distances[final][usable[end_of_path - 2]])
+			{
+				break;
+			}
+			swap(usable[end_of_path], usable[best_index]);
+			end_of_path++;
+		}
+		first = usable[end_of_path-2];
+		second = usable[end_of_path-1];
+		end_of_path -= 2;
 		// create new cluster
 		clusters[index] = clusters[first];
 		clusters[index].insert(clusters[index].end(),
