@@ -307,3 +307,41 @@ float LeadingOnes::evaluate(const vector<bool> & solution)
 	}
 	return 1;
 }
+
+float HIFF::evaluate(const vector<bool> & solution)
+{
+	int * level = new int[solution.size()];
+	int level_length = solution.size();
+	for(size_t i=0; i < solution.size(); i++)
+	{
+		level[i] = solution[i];
+	}
+	int power = 1;
+	int next_length = level_length >> 1;
+	int total = 0;
+	int maximum = 0;
+	while(next_length > 0)
+	{
+		int * next_level = new int[next_length];
+		for(int i=0; i + 1 < level_length; i+=2)
+		{
+			if(level[i] == level[i+1] and level[i] != -1)
+			{
+				total += power;
+				next_level[i >> 1] = level[i];
+			}
+			else
+			{
+				next_level[i >> 1] = -1;
+			}
+			maximum += power;
+		}
+		delete [] level;
+		level = next_level;
+		level_length = next_length;
+		next_length = level_length >> 1;
+		power <<= 1;
+	}
+	delete [] level;
+	return float(total) / maximum;
+}

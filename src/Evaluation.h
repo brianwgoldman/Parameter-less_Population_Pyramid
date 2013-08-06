@@ -100,6 +100,15 @@ public:
 	create_evaluator(LeadingOnes);
 };
 
+class HIFF: public Evaluator
+{
+	int precision;
+public:
+	HIFF(Configuration& config, int run_number):
+		precision(config.get<int>("precision")){}
+	float evaluate(const vector<bool> & solution) override;
+	create_evaluator(HIFF);
+};
 
 namespace evaluation
 {
@@ -109,6 +118,7 @@ namespace evaluation
 		{"DeceptiveStepTrap", DeceptiveStepTrap::create},
 		{"NearestNeighborNK", NearestNeighborNK::create},
 		{"LeadingOnes", LeadingOnes::create},
+		{"HIFF", HIFF::create},
 	});
 
 }

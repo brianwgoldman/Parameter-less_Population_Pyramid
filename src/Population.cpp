@@ -25,6 +25,7 @@ Population::Population(Configuration& config)
 	builder = builder_lookup[config.get<string>("tree_builder")];
 	ordering = ordering_lookup[config.get<string>("cluster_ordering")];
 	no_singles = config.get<int>("no_singles");
+	stop_after_one = config.get<int>("donate_until_different") != 1;
 }
 
 void Population::add(const vector<bool> & solution)
@@ -291,6 +292,7 @@ void Population::improve(Random& rand, vector<bool> & solution, float & fitness,
 
 			// attempt the donation
 			different = donate(solution, fitness, solutions[working], cluster, evaluator);
+			different |= stop_after_one;
 		}
 	}
 }
