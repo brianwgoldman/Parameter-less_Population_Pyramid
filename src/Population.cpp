@@ -22,15 +22,20 @@ Population::Population(Configuration& config)
 	{
 		cluster_ordering[i] = i;
 	}
-	builder = builder_lookup[config.get<string>("tree_builder")];
+
 	ordering = ordering_lookup[config.get<string>("cluster_ordering")];
 	no_singles = config.get<int>("no_singles");
 	stop_after_one = config.get<int>("donate_until_different") != 1;
 }
 
-void Population::add(const vector<bool> & solution)
+void Population::add(const vector<bool> & solution, bool use_in_tree)
 {
 	solutions.push_back(solution);
+	if(not use_in_tree)
+	{
+		return;
+	}
+
 	for(size_t i=0;i<solution.size()-1; i++)
 	{
 		for(size_t j=i+1; j < solution.size(); j++)
@@ -84,63 +89,6 @@ float Population::get_distance(int x, int y)
 	return pairwise_distance[x][y];
 }
 
-bool Population::minimize(const vector<vector<float>> & distances, const vector<size_t>& usable, const size_t& first, size_t & second)
-{
-	float min_value = distances[first][second];
-	bool change = false;
-	for(const auto i: usable)
-	{
-		if(distances[first][i] < min_value and i != first)
-		{
-			change = true;
-			min_value = distances[first][i];
-			second = i;
-		}
-	}
-	return change;
-}
-
-void Population::new_way(Random& rand, const vector<vector<float>> & distances, vector<size_t>& usable, size_t& first, size_t & second)
-{
-	std::shuffle(usable.begin(), usable.end(), rand);
-	first = *usable.begin();
-	second = *next(usable.begin());
-	while(minimize(distances, usable, first, second))
-	{
-		swap(first, second);
-		std::shuffle(usable.begin(), usable.end(), rand);
-	}
-}
-
-void Population::old_way(Random& rand, const vector<vector<float>> & distances, vector<size_t>& usable, size_t& first, size_t & second)
-{
-	float min_value=3;
-	vector<pair<int, int> > minimums;
-	// for all pairs of clusters
-	for(auto i=usable.begin(); i != usable.end(); i++)
-	{
-		for(auto j=next(i); j != usable.end(); j++)
-		{
-			auto x = *i;
-			auto y = *j;
-			float distance = distances[x][y];
-			if(distance <= min_value)
-			{
-				if(distance < min_value)
-				{
-					min_value = distance;
-					minimums.clear();
-				}
-				minimums.push_back(pair<int, int>(x, y));
-			}
-		}
-	}
-	// select a minimum at random
-	int choice = std::uniform_int_distribution<int>(0, minimums.size()-1)(rand);
-	first = minimums[choice].first;
-	second = minimums[choice].second;
-}
-
 void Population::rebuild_tree(Random& rand)
 {
 	vector<size_t> usable(length);
@@ -149,6 +97,8 @@ void Population::rebuild_tree(Random& rand)
 	shuffle(clusters.begin(), clusters.begin() + length, rand);
 
 	vector<vector<float> > distances(clusters.size(), vector<float>(clusters.size(), -1));
+
+	// find the initial distances between the clusters
 	for(size_t i=0; i < length - 1; i++)
 	{
 		for(size_t j=i + 1; j < length; j++)
@@ -157,21 +107,28 @@ void Population::rebuild_tree(Random& rand)
 			distances[j][i] = distances[i][j];
 		}
 	}
+
 	size_t first, second;
 	size_t final, best_index;
+	// Each iteration we add some amount to the path, and remove the last
+	// two elements.  This keeps track of how much of usable is in the path.
 	size_t end_of_path = 0;
+
 	// rebuild all clusters after the single variable clusters
 	for(size_t index=length; index < clusters.size(); index++)
 	{
 		std::shuffle(usable.begin() + end_of_path, usable.end(), rand);
+
 		// if nothing in the path, just add a random usable node
 		if(end_of_path == 0)
 		{
 			end_of_path++;
 		}
+
 		while(end_of_path < usable.size())
 		{
 			final = usable[end_of_path-1];
+
 			// index stores the location of the best thing in usable
 			best_index = end_of_path;
 			float min_dist = distances[final][usable[best_index]];
@@ -183,27 +140,36 @@ void Population::rebuild_tree(Random& rand)
 					best_index = option;
 				}
 			}
+
 			// If the current last two are minimally distant
-			if(end_of_path > 1 and
-					min_dist >= distances[final][usable[end_of_path - 2]])
+			if(end_of_path > 1 and min_dist >= distances[final][usable[end_of_path - 2]])
 			{
 				break;
 			}
+
+			// move the best to the end of the path
 			swap(usable[end_of_path], usable[best_index]);
 			end_of_path++;
 		}
+		// Last two elements in the path are the clusters to join
 		first = usable[end_of_path-2];
 		second = usable[end_of_path-1];
+
+		// Remove things from the path
 		end_of_path -= 2;
+
 		// create new cluster
 		clusters[index] = clusters[first];
 		clusters[index].insert(clusters[index].end(),
 				clusters[second].begin(), clusters[second].end());
+
+		// calculate distances to newly created cluster
 		int i = 0;
 		int end = usable.size() - 1;
 		while(i <= end)
 		{
 			auto x = usable[i];
+			// Removes 'first' and 'second' from usable
 			if(x == first or x == second)
 			{
 				swap(usable[i], usable[end]);
@@ -219,9 +185,12 @@ void Population::rebuild_tree(Random& rand)
 			distances[index][x] = distances[x][index];
 			i++;
 		}
+		// Shorten usable by 1, insert the new cluster
 		usable.pop_back();
 		usable.back() = index;
 	}
+
+	// Now that we know what clusters exist, determine their ordering
 	cluster_ordering.resize(clusters.size());
 	std::iota(cluster_ordering.begin(), cluster_ordering.end(), 0);
 	if(no_singles)

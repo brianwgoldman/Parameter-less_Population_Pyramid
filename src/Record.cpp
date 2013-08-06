@@ -9,7 +9,7 @@
 
 void Record::add(float fitness, int evals)
 {
-	if(verbosity > 0)
+	if(verbosity > 1)
 	{
 		std::cout << fitness << "\t" << evals << std::endl;
 	}

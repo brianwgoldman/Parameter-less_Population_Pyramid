@@ -38,16 +38,6 @@ private:
 	bool donate(vector<bool> & solution, float & fitness, vector<bool> & source, const vector<int> & cluster, Evaluator& evaluator);
 	static bool minimize(const vector<vector<float>> & distances, const vector<size_t>& usable, const size_t& first, size_t & second);
 
-	using tree_build=void (*)(Random& rand, const vector<vector<float>> & distances, vector<size_t>& usable, size_t& first, size_t & second);
-	tree_build builder;
-	static void new_way(Random& rand, const vector<vector<float>> & distances, vector<size_t>& usable, size_t& first, size_t & second);
-	static void old_way(Random& rand, const vector<vector<float>> & distances, vector<size_t>& usable, size_t& first, size_t & second);
-	std::unordered_map<string, tree_build> builder_lookup = {
-			{"new_way", new_way},
-			{"old_way", old_way}
-	};
-
-
 	using cluster_ordering_method=void (*)(Random& rand, const vector<vector<int>>& clusters, vector<int>& cluster_ordering);
 	cluster_ordering_method ordering;
 
@@ -71,11 +61,9 @@ public:
 	vector<vector<int> > clusters;
 	vector<int> cluster_ordering;
 
-	void add(const vector<bool> & solution);
+	void add(const vector<bool> & solution, bool use_in_tree=true);
 	void improve(Random& rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
 	void rebuild_tree(Random& rand);
-
-
 };
 
 #endif /* POPULATION_H_ */

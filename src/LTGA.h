@@ -20,10 +20,12 @@ class LTGA: public Optimizer
 private:
 	size_t length;
 	size_t pop_size;
+	bool disable_binary_insert;
 	Population pop;
 	std::unordered_map<vector<bool>, float> fitnesses;
 	std::unordered_set<vector<bool>> construct_set(float& fitness);
 	void initialize(Random& rand, Evaluator& evaluator, hill_climb::pointer hc);
+	void binary_insert(Random& rand, vector<vector<bool>> & solutions, Population& next_pop);
 	void generation(Random& rand, Evaluator& evaluator);
 	Configuration config;
 
@@ -32,6 +34,7 @@ public:
 	LTGA(Configuration& _config):
 		length(_config.get<int>("length")),
 		pop_size(_config.get<int>("pop_size")),
+		disable_binary_insert(_config.get<int>("binary_insert") != 1),
 		pop(_config) {config = _config;}
 	void optimize(Random& rand, Evaluator& evaluator, Configuration& config) override;
 	create_optimizer(LTGA);

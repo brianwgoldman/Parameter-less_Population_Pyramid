@@ -18,16 +18,20 @@ Record single_run(Random& rand, Configuration& config, evaluation::pointer probl
 vector<Record> multirun(Random& rand, Configuration& config, evaluation::pointer problem, optimize::pointer solver)
 {
 	int runs = config.get<int>("runs");
+	int verbosity = config.get<int>("verbosity");
 	vector<Record> records;
 	for(int run=0; run < runs; run++)
 	{
 		records.push_back(single_run(rand, config, problem, solver, run));
 		auto summary = Record::summarize(records);
-		std::cout << "Run: " << run
-				<< " Evals: " << records[records.size()-1].best().second
-				<< " MES: " << summary[MES]
-			    << " MAD: " << summary[MAD]
-			    << " FAILURES: " << summary[FAILURES] << std::endl;
+		if(verbosity > 0)
+		{
+			std::cout << "Run: " << run
+					<< " Evals: " << records[records.size()-1].best().second
+					<< " MES: " << summary[MES]
+					<< " MAD: " << summary[MAD]
+					<< " FAILURES: " << summary[FAILURES] << std::endl;
+		}
 	}
 	return records;
 }

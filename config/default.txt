@@ -7,13 +7,11 @@ step_size 2
 k 5
 problem_seed 0
 runs 10
-pop_size 20 # Only used for LTGA, not P3
 precision 65536
 problem_folder problem_files/
 experiment multirun
 seed -1
 verbosity 1
-tree_builder new_way
 cluster_ordering no_action
 no_singles 1
 donate_until_different 1
