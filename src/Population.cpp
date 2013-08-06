@@ -47,20 +47,6 @@ void Population::add(const vector<bool> & solution, bool use_in_tree)
 	}
 }
 
-float Population::neg_entropy(const array<int, 4>& counts, const float& total)
-{
-	float sum = 0;
-	float p;
-	for (const auto& value: counts)
-	{
-		if(value)
-		{
-			p = value / total;
-			sum += (p * log(p));
-		}
-	}
-	return sum;
-}
 
 void Population::update_entropy(int i, int j, const array<int, 4>& entry)
 {

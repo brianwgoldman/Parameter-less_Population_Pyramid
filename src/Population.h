@@ -27,7 +27,9 @@ private:
 
 	unordered_map<int, unordered_map<int, array<int, 4>>> occurrences;
 	unordered_map<int, unordered_map<int, float> > pairwise_distance;
-	float neg_entropy(const array<int, 4>& counts, const float& total);
+
+	template <size_t T>
+	float neg_entropy(const array<int, T>& counts, const float& total);
 	void update_entropy(int i, int j, const array<int, 4>& entry);
 
 	float get_distance(int x, int y);
@@ -65,5 +67,21 @@ public:
 	void improve(Random& rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
 	void rebuild_tree(Random& rand);
 };
+
+template <size_t T>
+float Population::neg_entropy(const array<int, T>& counts, const float& total)
+{
+	float sum = 0;
+	float p;
+	for (const auto& value: counts)
+	{
+		if(value)
+		{
+			p = value / total;
+			sum += (p * log(p));
+		}
+	}
+	return sum;
+}
 
 #endif /* POPULATION_H_ */
