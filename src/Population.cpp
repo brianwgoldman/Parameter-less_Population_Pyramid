@@ -26,6 +26,8 @@ Population::Population(Configuration& config)
 	ordering = ordering_lookup[config.get<string>("cluster_ordering")];
 	no_singles = config.get<int>("no_singles");
 	stop_after_one = config.get<int>("donate_until_different") != 1;
+	precision = config.get<int>("precision");
+	keep_zeros = config.get<int>("keep_zeros");
 }
 
 void Population::add(const vector<bool> & solution, bool use_in_tree)
@@ -58,7 +60,7 @@ void Population::update_entropy(int i, int j, const array<int, 4>& entry)
 	float total = bits[0] + bits[1];
 	float separate = neg_entropy(bits, total);
 	float together = neg_entropy(entry, total);
-	float ratio = 1;
+	float ratio = 2;
 	if (together)
 	{
 		ratio = (separate / together);
@@ -79,6 +81,7 @@ void Population::rebuild_tree(Random& rand)
 {
 	vector<size_t> usable(length);
 	std::iota(usable.begin(), usable.end(), 0);
+	vector<bool> useful(clusters.size(), true);
 	// shuffle the single variable clusters
 	shuffle(clusters.begin(), clusters.begin() + length, rand);
 
@@ -140,6 +143,11 @@ void Population::rebuild_tree(Random& rand)
 		// Last two elements in the path are the clusters to join
 		first = usable[end_of_path-2];
 		second = usable[end_of_path-1];
+		if(float_round(distances[first][second], precision) == 0)
+		{
+			useful[first] = keep_zeros;
+			useful[second] = keep_zeros;
+		}
 
 		// Remove things from the path
 		end_of_path -= 2;
@@ -181,8 +189,26 @@ void Population::rebuild_tree(Random& rand)
 	std::iota(cluster_ordering.begin(), cluster_ordering.end(), 0);
 	if(no_singles)
 	{
-		never_use_singletons();
+		for(size_t i=0; i < length; i++)
+		{
+			useful[i] = false;
+		}
 	}
+
+	// the last cluster contains all variables and is always useless
+	useful.back() = false;
+	// TODO TEST THIS
+	size_t kept=0;
+	for(size_t i=0; i < cluster_ordering.size(); i++)
+	{
+		if(useful[cluster_ordering[i]])
+		{
+			swap(cluster_ordering[i], cluster_ordering[kept]);
+			kept++;
+		}
+	}
+
+	cluster_ordering.resize(kept);
 	ordering(rand, clusters, cluster_ordering);
 }
 
@@ -249,15 +275,6 @@ void Population::improve(Random& rand, vector<bool> & solution, float & fitness,
 			different = donate(solution, fitness, solutions[working], cluster, evaluator);
 			different |= stop_after_one;
 		}
-	}
-}
-
-void Population::never_use_singletons()
-{
-	cluster_ordering.resize(length - 1);
-	for(size_t i=0; i < cluster_ordering.size(); i++)
-	{
-		cluster_ordering[i] = i + length;
 	}
 }
 

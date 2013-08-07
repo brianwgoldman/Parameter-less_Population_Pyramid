@@ -55,7 +55,9 @@ private:
 	};
 
 	bool no_singles;
-	void never_use_singletons();
+	int precision;
+	bool keep_zeros;
+
 public:
 	Population(Configuration& config);
 	virtual ~Population() = default;
