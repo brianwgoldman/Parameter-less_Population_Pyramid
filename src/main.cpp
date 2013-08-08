@@ -52,7 +52,7 @@ int main(int argc, char * argv[])
 		{
 			total += record.best().second;
 		}
-		cout <<"Total: " << total << endl;
+		cout <<"Average: " << total / records.size() << endl;
 	}
 	else
 	{

@@ -15,6 +15,7 @@
 #include <math.h>
 #include <fstream>
 #include <memory>
+#include <array>
 
 using std::vector;
 using std::size_t;
@@ -100,6 +101,32 @@ public:
 	create_evaluator(LeadingOnes);
 };
 
+class HIFF: public Evaluator
+{
+	int precision;
+public:
+	HIFF(Configuration& config, int run_number):
+		precision(config.get<int>("precision")){}
+	float evaluate(const vector<bool> & solution) override;
+	create_evaluator(HIFF);
+};
+
+class MAXSAT: public Evaluator
+{
+private:
+	int length;
+	int precision;
+	vector<std::array<int, 3>> clauses;
+	vector<std::array<bool, 3>> signs;
+	vector<std::array<int, 3>> sign_options = {
+			{{0, 0, 1}}, {{0, 1, 0}},
+			{{1, 0, 0}}, {{1, 0, 0}}, {{0, 1, 1}}, {{1, 1, 1}},
+	};
+public:
+	MAXSAT(Configuration& config, int run_number);
+	float evaluate(const vector<bool> & solution) override;
+	create_evaluator(MAXSAT);
+};
 
 namespace evaluation
 {
@@ -109,6 +136,8 @@ namespace evaluation
 		{"DeceptiveStepTrap", DeceptiveStepTrap::create},
 		{"NearestNeighborNK", NearestNeighborNK::create},
 		{"LeadingOnes", LeadingOnes::create},
+		{"HIFF", HIFF::create},
+		{"MAXSAT", MAXSAT::create},
 	});
 
 }

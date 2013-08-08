@@ -1,6 +1,9 @@
-hill_climber steepest_ascent
 optimizer LTGA
-pop_size 20 # Only used for LTGA, not P3
-tree_builder old_way
-cluster_ordering smallest_first
+hill_climber no_action
+cluster_ordering least_linked_first
 no_singles 0
+donate_until_different 0
+
+# Only used for LTGA, not P3
+pop_size 20
+binary_insert 1

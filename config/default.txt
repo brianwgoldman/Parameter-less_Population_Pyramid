@@ -1,19 +1,25 @@
-length 20 # Sets the number of bits in the problem
-hill_climber first_improvement # Which hill climber to use, "first_improvement" or "steepest_ascent"
-optimizer Pyramid # Either "Pyramid" (P3) or "LTGA"
-problem DeceptiveTrap
-trap_size 5
-step_size 2
-k 5
-problem_seed 0
-runs 10
-pop_size 20 # Only used for LTGA, not P3
-precision 65536
-problem_folder problem_files/
+# Experiment Related
 experiment multirun
-seed -1
-verbosity 1
-tree_builder new_way
+runs 10
+precision 65536 # Used in rounding
+seed -1 # Seed at the start of the experiment.  -1 seeds using system device
+verbosity 1 # How much information to output to the screen
+outfile output.dat # Where to save output
+
+# Problem Related
+problem DeceptiveTrap
+trap_size 5 # Used by all trap functions
+step_size 2 # Used by DeceptiveStepTrap
+k 5 # used by NK
+clauses # Used by MAXSAT
+length 20 # Sets the number of bits in the problem
+problem_seed 0 # When generating random problems, seed with this + run number
+problem_folder problem_files/ # Where to find/save problem files
+
+# Optimizer
+optimizer Pyramid # Either "Pyramid" (P3), "LTGA", or "RandomRestartHC"
+hill_climber first_improvement # Which hill climber to use
 cluster_ordering no_action
 no_singles 1
-outfile output.dat
+donate_until_different 1
+keep_zeros 0

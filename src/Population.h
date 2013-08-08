@@ -27,25 +27,18 @@ private:
 
 	unordered_map<int, unordered_map<int, array<int, 4>>> occurrences;
 	unordered_map<int, unordered_map<int, float> > pairwise_distance;
-	float neg_entropy(const array<int, 4>& counts, const float& total);
+
+	template <size_t T>
+	float neg_entropy(const array<int, T>& counts, const float& total);
 	void update_entropy(int i, int j, const array<int, 4>& entry);
 
 	float get_distance(int x, int y);
 	float get_distance(const vector<int> & c1, const vector<int> & c2);
 	size_t length;
+	bool stop_after_one;
 
 	bool donate(vector<bool> & solution, float & fitness, vector<bool> & source, const vector<int> & cluster, Evaluator& evaluator);
 	static bool minimize(const vector<vector<float>> & distances, const vector<size_t>& usable, const size_t& first, size_t & second);
-
-	using tree_build=void (*)(Random& rand, const vector<vector<float>> & distances, vector<size_t>& usable, size_t& first, size_t & second);
-	tree_build builder;
-	static void new_way(Random& rand, const vector<vector<float>> & distances, vector<size_t>& usable, size_t& first, size_t & second);
-	static void old_way(Random& rand, const vector<vector<float>> & distances, vector<size_t>& usable, size_t& first, size_t & second);
-	std::unordered_map<string, tree_build> builder_lookup = {
-			{"new_way", new_way},
-			{"old_way", old_way}
-	};
-
 
 	using cluster_ordering_method=void (*)(Random& rand, const vector<vector<int>>& clusters, vector<int>& cluster_ordering);
 	cluster_ordering_method ordering;
@@ -62,7 +55,9 @@ private:
 	};
 
 	bool no_singles;
-	void never_use_singletons();
+	int precision;
+	bool keep_zeros;
+
 public:
 	Population(Configuration& config);
 	virtual ~Population() = default;
@@ -70,11 +65,25 @@ public:
 	vector<vector<int> > clusters;
 	vector<int> cluster_ordering;
 
-	void add(const vector<bool> & solution);
+	void add(const vector<bool> & solution, bool use_in_tree=true);
 	void improve(Random& rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
 	void rebuild_tree(Random& rand);
-
-
 };
+
+template <size_t T>
+float Population::neg_entropy(const array<int, T>& counts, const float& total)
+{
+	float sum = 0;
+	float p;
+	for (const auto& value: counts)
+	{
+		if(value)
+		{
+			p = value / total;
+			sum += (p * log(p));
+		}
+	}
+	return sum;
+}
 
 #endif /* POPULATION_H_ */
