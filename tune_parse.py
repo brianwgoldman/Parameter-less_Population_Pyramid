@@ -28,6 +28,6 @@ for index in range(3, len(headers)):
     print '-------', headers[index], '---------'
     orderable = []
     for element, records in ranks[index].items():
-        orderable.append((sum(records) / len(records), element))
+        orderable.append((sum(records) / len(records), element, len(records)))
     for line in sorted(orderable):
         print '\t'.join(map(str, line))
