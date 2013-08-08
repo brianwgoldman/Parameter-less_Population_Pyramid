@@ -47,10 +47,9 @@ for (problem, length) in [('DeceptiveTrap', '504'),
                             print " ".join(combined)
                             try:
                                 call(combined)
+                                remove(filename + ".start")
                             except Exception as e:
                                 print e
-                            finally:
-                                remove(filename + ".start")
                             sys.exit()
 
 open(path.join(folder, "result.txt")).close()

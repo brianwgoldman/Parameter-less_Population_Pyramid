@@ -16,7 +16,7 @@ for filename in sys.argv[1:]:
     sortable[problem].append(median + version)
 
 for problem, data in sortable.items():
-    print '-----------', problem, '-------------'
+    print '-----------', problem, '-------------', len(data)
     print '\t'.join(headers)
     for line in sorted(data):
         print '\t'.join(map(str, line))

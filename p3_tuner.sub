@@ -2,7 +2,7 @@
 #PBS -l pmem=2gb
 #PBS -l walltime=80:00:00
 #PBS -j oe
-#PBS -N NAME
+#PBS -N P3_TUNE
 #PBS -o /mnt/scratch/goldma72/P3_TUNE_${PBS_JOBID}.tmp
 
 # Required by C++11
