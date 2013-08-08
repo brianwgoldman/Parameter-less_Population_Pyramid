@@ -55,7 +55,7 @@ def start_run(folder, repeats, pop_size):
                 remove(filename + ".start")
             return
     print "RUNS INCOMPLETE"
-    time.sleep(10)
+    sys.exit()
 
 
 while True:
