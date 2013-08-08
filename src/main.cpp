@@ -46,13 +46,18 @@ int main(int argc, char * argv[])
 	{
 		vector<Record> records = multirun(rand, config, problem, optimizer_method);
 		auto summary = Record::summarize(records);
+		ofstream out(outfile.c_str());
 		cout << summary[MES] << " " << summary[MAD] << " " << summary[FAILURES] << endl;
-		int total = 0;
+		out << "# " << summary[MES] << " " << summary[MAD] << " " << summary[FAILURES] << endl;
 		for(const auto& record: records)
 		{
-			total += record.best().second;
+			if(config.get<int>("verbosity") > 1)
+			{
+				cout << record.best().first << " " << record.best().second << endl;
+			}
+			out << record.best().first << " " << record.best().second << endl;
 		}
-		cout <<"Average: " << total / records.size() << endl;
+		out.close();
 	}
 	else
 	{
