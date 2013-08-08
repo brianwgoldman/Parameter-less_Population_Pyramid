@@ -345,3 +345,53 @@ float HIFF::evaluate(const vector<bool> & solution)
 	delete [] level;
 	return float(total) / maximum;
 }
+
+MAXSAT::MAXSAT(Configuration& config, int run_number)
+{
+	length = config.get<int>("length");
+	precision = config.get<int>("precision");
+	clauses.resize(config.get<int>("clauses"));
+	signs.resize(clauses.size());
+
+	int rng_seed = config.get<int>("problem_seed") + run_number;
+	Random rand(rng_seed);
+	vector<bool> solution = rand_vector(rand, length);
+
+	vector<int> options(length);
+	std::iota(options.begin(), options.end(), 0);
+
+	std::uniform_int_distribution<> dist[] = {
+			std::uniform_int_distribution<>(0, length-1),
+			std::uniform_int_distribution<>(1, length-1),
+			std::uniform_int_distribution<>(2, length-1)
+	};
+
+	auto sign_select = std::uniform_int_distribution<>(0, sign_options.size()-1);
+	for(size_t i=0; i < clauses.size(); i++)
+	{
+		int select = sign_select(rand);
+		for(int c = 0; c < 3; c++)
+		{
+			std::swap(options[c], options[dist[c](rand)]);
+			clauses[i][c] = options[c];
+			signs[i][c] = sign_options[select][c] == solution[options[c]];
+		}
+	}
+}
+
+float MAXSAT::evaluate(const vector<bool> & solution)
+{
+	int total = 0;
+	for(size_t i=0; i < clauses.size(); i++)
+	{
+		for(size_t c = 0; c < 3; c++)
+		{
+			if(solution[clauses[i][c]] == signs[i][c])
+			{
+				total++;
+				break;
+			}
+		}
+	}
+	return float_round(float(total) / clauses.size(), precision);
+}

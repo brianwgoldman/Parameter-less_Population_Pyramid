@@ -8,9 +8,10 @@ outfile output.dat # Where to save output
 
 # Problem Related
 problem DeceptiveTrap
-trap_size 5
-step_size 2
-k 5
+trap_size 5 # Used by all trap functions
+step_size 2 # Used by DeceptiveStepTrap
+k 5 # used by NK
+clauses # Used by MAXSAT
 length 20 # Sets the number of bits in the problem
 problem_seed 0 # When generating random problems, seed with this + run number
 problem_folder problem_files/ # Where to find/save problem files
