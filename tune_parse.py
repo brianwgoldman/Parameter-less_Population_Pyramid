@@ -15,8 +15,19 @@ for filename in sys.argv[1:]:
         median = map(int, f.read().split('\n')[0].split(' ')[1:])
     sortable[problem].append(median + version)
 
+ranks = [defaultdict(list) for _ in range(len(headers))]
 for problem, data in sortable.items():
     print '-----------', problem, '-------------', len(data)
     print '\t'.join(headers)
-    for line in sorted(data):
+    for rank, line in enumerate(sorted(data)):
+        print '\t'.join(map(str, line))
+        for index, element in enumerate(line):
+            ranks[index][element].append(rank)
+
+for index in range(3, len(headers)):
+    print '-------', headers[index], '---------'
+    orderable = []
+    for element, records in ranks[index].items():
+        orderable.append((sum(records) / len(records), element))
+    for line in sorted(orderable):
         print '\t'.join(map(str, line))
