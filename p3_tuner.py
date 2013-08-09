@@ -52,4 +52,4 @@ for (problem, length) in [('DeceptiveTrap', '504'),
                                 print e
                             sys.exit()
 
-open(path.join(folder, "result.txt")).close()
+open(path.join(folder, "result.txt"), 'w').close()
