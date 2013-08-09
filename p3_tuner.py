@@ -15,7 +15,6 @@ folder = "tuning"
 jobname = sys.argv[1]
 arguments = [path.join("config", "default.txt"),
              path.join("config", "tune.txt"),
-             '-runs 1',
              ]
 
 flag_titles = ['-problem', '-length', '-hill_climber', '-cluster_ordering',
