@@ -15,7 +15,6 @@ folder = "tuning"
 jobname = sys.argv[1]
 arguments = [path.join("config", "default.txt"),
              path.join("config", "tune.txt"),
-             '-runs 1',
              ]
 
 flag_titles = ['-problem', '-length', '-hill_climber', '-cluster_ordering',
@@ -24,10 +23,11 @@ flag_titles = ['-problem', '-length', '-hill_climber', '-cluster_ordering',
 def interleave(a, b):
     return [x for pair in zip(a, b) for x in pair]
 
-for (problem, length) in [('DeceptiveTrap', '504'),
-                          ('DeceptiveStepTrap', '504'),
-                          ('NearestNeighborNK', '500'),
+for (problem, length) in [
                           ('HIFF', '512'),
+                          ('NearestNeighborNK', '500'),
+                          ('DeceptiveStepTrap', '504'),
+                          ('DeceptiveTrap', '504'),
                           ('MAXSAT', '100'),
                           ]:
     for hc in ['no_action', 'binary_tournament', 'once_each', 'first_improvement', 'steepest_ascent']:
