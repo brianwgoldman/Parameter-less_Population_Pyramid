@@ -33,6 +33,10 @@ void Configuration::parse(char filename[])
 	ifstream in(filename);
 	string key;
 	string value;
+	if(!in)
+	{
+		throw invalid_argument("Configuration file does not exist: " + string(filename));
+	}
 	while(in)
 	{
 		in >> key;
@@ -49,6 +53,20 @@ void Configuration::parse(char filename[])
 			in >> value;
 			data[key] = value;
 		}
+	}
+}
+
+void Configuration::dump(ostream& out)
+{
+	vector<pair<string, string> > sortable;
+	for(const auto& it: data)
+	{
+		sortable.push_back(it);
+	}
+	sort(sortable.begin(), sortable.end());
+	for(const auto& it: sortable)
+	{
+		out << it.first << " " << it.second << endl;
 	}
 }
 

@@ -14,6 +14,8 @@
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
+#include <vector>
+#include <algorithm>
 
 using std::unordered_map;
 using std::string;
@@ -29,6 +31,8 @@ public:
 
 	void parse(int argc, char * argv[]);
 	void parse(char filename[]);
+
+	void dump(std::ostream& out);
 
 	template <class T>
 	T get(const string key);

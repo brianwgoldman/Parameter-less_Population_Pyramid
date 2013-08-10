@@ -28,6 +28,9 @@ int main(int argc, char * argv[])
 	config.parse(argc, argv);
 	int seed = config.get<int>("seed");
 	string outfile = config.get<string>("outfile");
+	ofstream cfg_out(config.get<string>("cfg_outfile"));
+	config.dump(cfg_out);
+	cfg_out.close();
 	if(seed == -1)
 	{
 		std::random_device rd;
