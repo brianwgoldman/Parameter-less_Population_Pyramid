@@ -17,6 +17,8 @@
 #include <memory>
 #include <array>
 
+#define PI 3.14159265
+
 using std::vector;
 using std::size_t;
 using std::shared_ptr;
@@ -128,6 +130,20 @@ public:
 	create_evaluator(MAXSAT);
 };
 
+class Rastrigin: public Evaluator
+{
+private:
+	int precision;
+	BinaryToFloat converter;
+	unordered_map<float, float> function;
+	float worst;
+
+public:
+	Rastrigin(Configuration& config, int run_number);
+	float evaluate(const vector<bool> & solution) override;
+	create_evaluator(Rastrigin);
+};
+
 namespace evaluation
 {
 	using pointer=shared_ptr<Evaluator> (*)(Configuration &, int);
@@ -138,6 +154,7 @@ namespace evaluation
 		{"LeadingOnes", LeadingOnes::create},
 		{"HIFF", HIFF::create},
 		{"MAXSAT", MAXSAT::create},
+		{"Rastrigin", Rastrigin::create},
 	});
 
 }

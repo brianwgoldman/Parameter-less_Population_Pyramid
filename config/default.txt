@@ -13,6 +13,7 @@ trap_size 5 # Used by all trap functions
 step_size 2 # Used by DeceptiveStepTrap
 k 5 # used by NK
 clauses 85 # Used by MAXSAT
+bits_per_float 16 # Used by Rastrigin
 length 20 # Sets the number of bits in the problem
 problem_seed 0 # When generating random problems, seed with this + run number
 problem_folder problem_files/ # Where to find/save problem files

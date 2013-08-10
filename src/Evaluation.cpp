@@ -395,3 +395,34 @@ float MAXSAT::evaluate(const vector<bool> & solution)
 	}
 	return float_round(float(total) / clauses.size(), precision);
 }
+
+Rastrigin::Rastrigin(Configuration& config, int run_number):
+		precision(config.get<int>("precision")),
+		converter(BinaryToFloat(config.get<int>("bits_per_float"),
+				-5.12, 5.11, precision))
+{
+	worst = 0;
+	for(const auto& x: converter.possible())
+	{
+		function[x] = 10 + x * x - 10 * cos(2 * PI * x);
+		if(worst < function[x])
+		{
+			worst = function[x];
+		}
+	}
+}
+
+float Rastrigin::evaluate(const vector<bool>& solution)
+{
+	auto it = solution.begin();
+	float x, total=0;
+	int n = 0;
+	while(it != solution.end())
+	{
+		x = converter.convert(it);
+		total += function[x];
+		n++;
+	}
+	total /= (n * worst);
+	return float_round(1 - total, precision);
+}

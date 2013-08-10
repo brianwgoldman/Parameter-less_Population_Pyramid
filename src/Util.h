@@ -48,4 +48,26 @@ T make_filable(const T entry)
 	return new_value;
 }
 
+class BinaryToFloat
+{
+private:
+	size_t bits;
+	vector<float> values;
+public:
+	BinaryToFloat(size_t _bits, float min, float max, int precision);
+	template <typename ForwardIterator>
+	float convert(ForwardIterator& it)
+	{
+		size_t index=0;
+		for(size_t i=0; i < bits; i++)
+		{
+			index <<= 1;
+			index |= *it;
+			it++;
+		}
+		return values[index];
+	}
+	const vector<float>& possible(){ return values; }
+};
+
 #endif /* UTIL_H_ */
