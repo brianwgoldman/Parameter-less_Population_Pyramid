@@ -97,8 +97,10 @@ public:
 
 class LeadingOnes: public Evaluator
 {
+	int precision;
 public:
-	LeadingOnes(Configuration& config, int run_number) {}
+	LeadingOnes(Configuration& config, int run_number):
+		precision(config.get<int>("precision"))  {}
 	float evaluate(const vector<bool> & solution) override;
 	create_evaluator(LeadingOnes);
 };

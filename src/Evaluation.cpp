@@ -302,7 +302,7 @@ float LeadingOnes::evaluate(const vector<bool> & solution)
 	{
 		if(not solution[i])
 		{
-			return float(i) / solution.size();
+			return float_round(float(i) / solution.size(), precision);
 		}
 	}
 	return 1;
