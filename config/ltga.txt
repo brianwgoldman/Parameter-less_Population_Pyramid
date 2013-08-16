@@ -3,6 +3,7 @@ hill_climber no_action
 cluster_ordering least_linked_first
 no_singles 0
 donate_until_different 0
+keep_zeros 0
 
 # Only used for LTGA, not P3
 pop_size 20
