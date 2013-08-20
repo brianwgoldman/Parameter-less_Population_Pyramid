@@ -399,7 +399,7 @@ float MAXSAT::evaluate(const vector<bool> & solution)
 Rastrigin::Rastrigin(Configuration& config, int run_number):
 		precision(config.get<int>("precision")),
 		converter(BinaryToFloat(config.get<int>("bits_per_float"),
-				-5.12, 5.11, precision))
+				-5.12, 5.12, precision))
 {
 	worst = 0;
 	for(const auto& x: converter.possible())
