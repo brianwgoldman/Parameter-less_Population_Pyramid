@@ -24,23 +24,30 @@ void hill_climb::first_improvement(Random & rand, vector<bool> & solution, float
 	iota(options.begin(), options.end(), 0);
 	float new_fitness;
 	bool improvement;
+	std::unordered_set<int> tried;
 	do
 	{
 		improvement = false;
 		std::shuffle(options.begin(), options.end(), rand);
 		for(const auto& index: options)
 		{
+			if(tried.count(index) != 0)
+			{
+				continue;
+			}
 			solution[index] = not solution[index];
 			new_fitness = evaluator.evaluate(solution);
 			if(fitness < new_fitness)
 			{
 				fitness = new_fitness;
 				improvement = true;
+				tried.clear();
 			}
 			else
 			{
 				solution[index] = not solution[index];
 			}
+			tried.insert(index);
 		}
 	} while(improvement);
 }

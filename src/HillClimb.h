@@ -12,6 +12,7 @@
 #include "Util.h"
 #include "Configuration.h"
 #include <unordered_map>
+#include <unordered_set>
 
 namespace hill_climb
 {
