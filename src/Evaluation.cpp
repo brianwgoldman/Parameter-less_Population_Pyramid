@@ -350,7 +350,7 @@ MAXSAT::MAXSAT(Configuration& config, int run_number)
 {
 	length = config.get<int>("length");
 	precision = config.get<int>("precision");
-	clauses.resize(config.get<int>("clauses"));
+	clauses.resize(float_round(config.get<float>("clause_ratio") * length, precision));
 	signs.resize(clauses.size());
 
 	int rng_seed = config.get<int>("problem_seed") + run_number;

@@ -1,5 +1,5 @@
 trap_size 7
 k 5
-clauses 427
+clause_ratio 4.27
 runs 100
 verbosity 2
