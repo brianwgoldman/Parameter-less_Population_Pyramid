@@ -396,6 +396,58 @@ float MAXSAT::evaluate(const vector<bool> & solution)
 	return float_round(float(total) / clauses.size(), precision);
 }
 
+IsingSpinGlass::IsingSpinGlass(Configuration& config, int run_number):
+		length(config.get<int>("length")), precision(config.get<int>("precision"))
+{
+	int rng_seed = config.get<int>("problem_seed") + run_number;
+
+	// Build up the filename where this problem is stored
+	string filename = config.get<string>("problem_folder");
+	filename += + "IsingSpinGlass_";
+	filename += config.get<string>("length") + "_";
+	filename += to_string(rng_seed) + ".txt";
+	ifstream in(filename.c_str());
+	if(!in)
+	{
+		throw invalid_argument("IsingSpinGlass data file does not exist: " + filename);
+	}
+	spins.resize(length * 2);
+	in >> min_energy;
+	span = length * 2 - min_energy;
+	string solution_string;
+	in >> solution_string;
+	for(auto& spin: spins)
+	{
+		for(auto& part: spin)
+		{
+			in >> part;
+		}
+	}
+	in.close();
+
+	// sanity check
+	vector<bool> solution(length);
+	for(int i=0; i < length; i++)
+	{
+		solution[i] = solution_string[i] == '1';
+	}
+	if(evaluate(solution) != 1)
+	{
+		throw invalid_argument("IsingSpinGlass data file has inconsistent data: " + filename);
+	}
+}
+
+float IsingSpinGlass::evaluate(const vector<bool>& solution)
+{
+	int energy=0;
+	for(const auto& spin: spins)
+	{
+		energy -= (bit_to_sign[solution[spin[0]]] *
+				spin[2] * bit_to_sign[solution[spin[1]]]);
+	}
+	return float_round(1 - (energy - min_energy) / span, precision);
+}
+
 Rastrigin::Rastrigin(Configuration& config, int run_number):
 		precision(config.get<int>("precision")),
 		converter(BinaryToFloat(config.get<int>("bits_per_float"),

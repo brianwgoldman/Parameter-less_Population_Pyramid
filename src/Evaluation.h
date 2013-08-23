@@ -139,6 +139,22 @@ public:
 	create_evaluator(MAXSAT);
 };
 
+class IsingSpinGlass: public Evaluator
+{
+private:
+	int length;
+	int precision;
+	int min_energy;
+	float span;
+	std::array<int, 2> bit_to_sign = {{-1, 1}};
+	vector<std::array<int, 3>> spins;
+
+public:
+	IsingSpinGlass(Configuration& config, int run_number);
+	float evaluate(const vector<bool> & solution) override;
+	create_evaluator(IsingSpinGlass);
+};
+
 class Rastrigin: public Evaluator
 {
 private:
@@ -164,6 +180,7 @@ namespace evaluation
 		{"LeadingOnes", LeadingOnes::create},
 		{"HIFF", HIFF::create},
 		{"MAXSAT", MAXSAT::create},
+		{"IsingSpinGlass", IsingSpinGlass::create},
 		{"Rastrigin", Rastrigin::create},
 	});
 
