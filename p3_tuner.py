@@ -27,7 +27,7 @@ for (problem, length) in [
                           ('HIFF', '512'),
                           ('NearestNeighborNK', '500'),
                           ('DeceptiveStepTrap', '504'),
-                          ('Rastrigin', '496'),
+                          ('Rastrigin', '500'),
                           ('DeceptiveTrap', '504'),
                           ('MAXSAT', '100'),
                           ]:
