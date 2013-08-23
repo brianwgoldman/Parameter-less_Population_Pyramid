@@ -13,7 +13,7 @@ void RandomRestartHC::optimize(Random& rand, Evaluator& evaluator, Configuration
 	auto hill_climber = config.get<hill_climb::pointer>("hill_climber");
 	int length = config.get<int>("length");
 	int restarts_without_improvement = 0;
-	while(fitness < 1.0 and restarts_without_improvement < length)
+	while(fitness < 1.0 and restarts_without_improvement < length * length)
 	{
 		auto solution = rand_vector(rand, length);
 		float current = evaluator.evaluate(solution);

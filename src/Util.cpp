@@ -29,6 +29,16 @@ void print(const vector<bool> & vect, std::ostream & out)
 
 }
 
+size_t hamming_distance(const vector<bool> & a, const vector<bool> & b)
+{
+	size_t difference=0;
+	for(size_t i=0; i < a.size(); i++)
+	{
+		difference += a[i] != b[i];
+	}
+	return difference;
+}
+
 float float_round(float value, int precision)
 {
 	return round(value * precision) / precision;

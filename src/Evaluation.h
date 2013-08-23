@@ -33,7 +33,15 @@ class Evaluator
 public:
 	Evaluator() = default;
 	virtual ~Evaluator() = default;
-	float virtual evaluate(const vector<bool> & solution);
+	float virtual evaluate(const vector<bool> & solution) = 0;
+};
+
+class OneMax: public Evaluator
+{
+public:
+	OneMax(Configuration& config, int run_number) {};
+	float evaluate(const vector<bool> & solution) override;
+	create_evaluator(OneMax);
 };
 
 class DeceptiveTrap: public Evaluator
@@ -118,7 +126,6 @@ public:
 class MAXSAT: public Evaluator
 {
 private:
-	int length;
 	int precision;
 	vector<std::array<int, 3>> clauses;
 	vector<std::array<bool, 3>> signs;
@@ -130,6 +137,22 @@ public:
 	MAXSAT(Configuration& config, int run_number);
 	float evaluate(const vector<bool> & solution) override;
 	create_evaluator(MAXSAT);
+};
+
+class IsingSpinGlass: public Evaluator
+{
+private:
+	int length;
+	int precision;
+	int min_energy;
+	float span;
+	std::array<int, 2> bit_to_sign = {{-1, 1}};
+	vector<std::array<int, 3>> spins;
+
+public:
+	IsingSpinGlass(Configuration& config, int run_number);
+	float evaluate(const vector<bool> & solution) override;
+	create_evaluator(IsingSpinGlass);
 };
 
 class Rastrigin: public Evaluator
@@ -150,12 +173,14 @@ namespace evaluation
 {
 	using pointer=shared_ptr<Evaluator> (*)(Configuration &, int);
 	static std::unordered_map<string, pointer> lookup({
+		{"OneMax", OneMax::create},
 		{"DeceptiveTrap", DeceptiveTrap::create},
 		{"DeceptiveStepTrap", DeceptiveStepTrap::create},
 		{"NearestNeighborNK", NearestNeighborNK::create},
 		{"LeadingOnes", LeadingOnes::create},
 		{"HIFF", HIFF::create},
 		{"MAXSAT", MAXSAT::create},
+		{"IsingSpinGlass", IsingSpinGlass::create},
 		{"Rastrigin", Rastrigin::create},
 	});
 
