@@ -9,6 +9,7 @@ CPP_SRCS += \
 ../src/Experiments.cpp \
 ../src/HillCimb.cpp \
 ../src/LTGA.cpp \
+../src/LambdaLambda.cpp \
 ../src/MiddleLayer.cpp \
 ../src/OptimizationCollection.cpp \
 ../src/Population.cpp \
@@ -24,6 +25,7 @@ OBJS += \
 ./src/Experiments.o \
 ./src/HillCimb.o \
 ./src/LTGA.o \
+./src/LambdaLambda.o \
 ./src/MiddleLayer.o \
 ./src/OptimizationCollection.o \
 ./src/Population.o \
@@ -39,6 +41,7 @@ CPP_DEPS += \
 ./src/Experiments.d \
 ./src/HillCimb.d \
 ./src/LTGA.d \
+./src/LambdaLambda.d \
 ./src/MiddleLayer.d \
 ./src/OptimizationCollection.d \
 ./src/Population.d \

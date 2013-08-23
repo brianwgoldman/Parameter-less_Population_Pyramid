@@ -33,7 +33,15 @@ class Evaluator
 public:
 	Evaluator() = default;
 	virtual ~Evaluator() = default;
-	float virtual evaluate(const vector<bool> & solution);
+	float virtual evaluate(const vector<bool> & solution) = 0;
+};
+
+class OneMax: public Evaluator
+{
+public:
+	OneMax(Configuration& config, int run_number) {};
+	float evaluate(const vector<bool> & solution) override;
+	create_evaluator(OneMax);
 };
 
 class DeceptiveTrap: public Evaluator
@@ -118,7 +126,6 @@ public:
 class MAXSAT: public Evaluator
 {
 private:
-	int length;
 	int precision;
 	vector<std::array<int, 3>> clauses;
 	vector<std::array<bool, 3>> signs;
@@ -150,6 +157,7 @@ namespace evaluation
 {
 	using pointer=shared_ptr<Evaluator> (*)(Configuration &, int);
 	static std::unordered_map<string, pointer> lookup({
+		{"OneMax", OneMax::create},
 		{"DeceptiveTrap", DeceptiveTrap::create},
 		{"DeceptiveStepTrap", DeceptiveStepTrap::create},
 		{"NearestNeighborNK", NearestNeighborNK::create},

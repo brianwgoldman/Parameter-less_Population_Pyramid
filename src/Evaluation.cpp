@@ -14,7 +14,7 @@ evaluation::pointer Configuration::get(const string key)
 	return evaluation::lookup[get<string>(key)];
 }
 
-float Evaluator::evaluate(const vector<bool> & solution)
+float OneMax::evaluate(const vector<bool> & solution)
 {
 	float sum = 0;
 	for(const bool & bit: solution)
@@ -348,7 +348,7 @@ float HIFF::evaluate(const vector<bool> & solution)
 
 MAXSAT::MAXSAT(Configuration& config, int run_number)
 {
-	length = config.get<int>("length");
+	size_t length = config.get<int>("length");
 	precision = config.get<int>("precision");
 	clauses.resize(float_round(config.get<float>("clause_ratio") * length, precision));
 	signs.resize(clauses.size());

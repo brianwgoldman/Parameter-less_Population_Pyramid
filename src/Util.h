@@ -21,6 +21,8 @@ vector<bool> rand_vector(Random& rand, const size_t length);
 
 void print(const vector<bool> & vect, std::ostream & out=std::cout);
 
+size_t hamming_distance(const vector<bool> & a, const vector<bool> & b);
+
 float float_round(float value, int precision);
 
 template <class T>
