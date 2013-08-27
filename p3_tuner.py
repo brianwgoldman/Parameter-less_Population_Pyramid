@@ -30,6 +30,7 @@ for (problem, length) in [
                           ('Rastrigin', '500'),
                           ('DeceptiveTrap', '504'),
                           ('MAXSAT', '100'),
+                          ('IsingSpinGlass', '484'),
                           ]:
     for hc in ['no_action', 'binary_tournament', 'once_each', 'first_improvement', 'steepest_ascent']:
         for ordering in ['no_action', 'least_linked_first', 'smallest_first', 'random']:
