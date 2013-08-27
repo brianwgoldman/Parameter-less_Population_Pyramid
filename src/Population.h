@@ -38,7 +38,6 @@ private:
 	bool stop_after_one;
 
 	bool donate(vector<bool> & solution, float & fitness, vector<bool> & source, const vector<int> & cluster, Evaluator& evaluator);
-	static bool minimize(const vector<vector<float>> & distances, const vector<size_t>& usable, const size_t& first, size_t & second);
 
 	using cluster_ordering_method=void (*)(Random& rand, const vector<vector<int>>& clusters, vector<int>& cluster_ordering);
 	cluster_ordering_method ordering;
