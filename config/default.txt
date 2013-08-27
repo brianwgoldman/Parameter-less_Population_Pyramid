@@ -1,7 +1,7 @@
 # Experiment Related
 experiment multirun
 runs 10
-eval_limit 1000000000 # Limit at 1 billion evaluations
+eval_limit 100000000 # Limit at 100 million evaluations
 precision 65536 # Used in rounding
 seed -1 # Seed at the start of the experiment.  -1 seeds using system device
 verbosity 1 # How much information to output to the screen
