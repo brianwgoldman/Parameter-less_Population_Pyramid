@@ -8,21 +8,20 @@
 #include "MiddleLayer.h"
 
 Middle_Layer::Middle_Layer(Configuration& config, shared_ptr<Evaluator> evaler):
-   evaluator(evaler), counter(0), best_fitness(0), best_found(0), results(config)
-{
-
-}
+   evaluator(evaler), evaluations(0),
+   best_fitness(std::numeric_limits<float>::min()),
+   best_found(0), results(config) { }
 
 float Middle_Layer::evaluate(const vector<bool>& solution)
 {
-	counter ++;
+	evaluations++;
 	float fitness = evaluator->evaluate(solution);
 	if(best_fitness < fitness)
 	{
 		best_fitness = fitness;
 		best_solution = solution;
-		best_found = counter;
-		results.add(fitness, counter);
+		best_found = evaluations;
+		results.add(fitness, evaluations);
 	}
 	return fitness;
 }

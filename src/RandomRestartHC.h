@@ -13,9 +13,13 @@
 #include "HillClimb.h"
 
 class RandomRestartHC: public Optimizer {
+private:
+	hill_climb::pointer hill_climber;
 public:
-	RandomRestartHC(Configuration& config) {};
-	virtual void optimize(Random& rand, Evaluator& evaluator, Configuration& config) override;
+	RandomRestartHC(Random& _rand, Evaluator& _evaluator, Configuration& _config):
+		Optimizer(_rand, _evaluator, _config),
+		hill_climber(_config.get<hill_climb::pointer>("hill_climber")) { }
+	virtual bool iterate() override;
 	create_optimizer(RandomRestartHC);
 };
 

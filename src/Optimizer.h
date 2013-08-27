@@ -14,17 +14,23 @@
 #include <memory>
 using std::shared_ptr;
 
-#define create_optimizer(name) static shared_ptr<Optimizer> create(Configuration& config)\
+#define create_optimizer(name) static shared_ptr<Optimizer> create(Random& rand, Evaluator& evaluator, Configuration& config)\
 {\
-	return shared_ptr<Optimizer>(new name(config));\
+	return shared_ptr<Optimizer>(new name(rand, evaluator, config));\
 }
 
 class Optimizer
 {
+protected:
+	Random& rand;
+	Evaluator& evaluator;
+	Configuration& config;
+	size_t length;
 public:
-	Optimizer() = default;
+	Optimizer(Random& _rand, Evaluator& _evaluator, Configuration& _config):
+		rand(_rand), evaluator(_evaluator), config(_config), length(_config.get<int>("length")) { }
 	virtual ~Optimizer() = default;
-	virtual void optimize(Random& rand, Evaluator& evaluator, Configuration& config) = 0;
+	virtual bool iterate() = 0;
 };
 
 
