@@ -7,8 +7,13 @@
 
 #include "LTGA.h"
 
-void LTGA::initialize(Random & rand, Evaluator & evaluator, hill_climb::pointer hc)
+LTGA::LTGA(Random& _rand, Evaluator& _evaluator, Configuration& _config):
+	Optimizer(_rand, _evaluator, _config), pop(_config)
 {
+	pop_size = config.get<int>("pop_size");
+	disable_binary_insert = config.get<int>("binary_insert") != 1;
+	hc = config.get<hill_climb::pointer>("hill_climber");
+
 	float fitness;
 	vector<vector<bool>> solutions;
 	for(size_t i=0; i < pop_size; i++)
@@ -40,7 +45,7 @@ void LTGA::binary_insert(Random& rand, vector<vector<bool>> & solutions, Populat
 	}
 }
 
-void LTGA::generation(Random& rand, Evaluator& evaluator)
+void LTGA::generation()
 {
 	pop.rebuild_tree(rand);
 	float fitness;
@@ -57,37 +62,15 @@ void LTGA::generation(Random& rand, Evaluator& evaluator)
 	pop = next_generation;
 }
 
-std::unordered_set<vector<bool>> LTGA::construct_set(float& fitness)
+bool LTGA::iterate()
 {
-	std::unordered_set<vector<bool>> set;
-	float new_best;
-	for(auto & solution: pop.solutions)
+	generation();
+	decltype(pop_set) new_set(pop.solutions.begin(), pop.solutions.end());
+	if(new_set == pop_set)
 	{
-		new_best = fitnesses[solution];
-		if(fitness < new_best)
-		{
-			fitness = new_best;
-		}
-		set.insert(solution);
+		// all organisms identical after two generation, so stop
+		return false;
 	}
-	return set;
-}
-
-void LTGA::optimize(Random& rand, Evaluator& evaluator, Configuration& config)
-{
-	float fitness = 0;
-	auto hc = config.get<hill_climb::pointer>("hill_climber");
-	initialize(rand, evaluator, hc);
-
-	previous_set = construct_set(fitness);
-	while(fitness < 1.0)
-	{
-		generation(rand, evaluator);
-		auto new_set = construct_set(fitness);
-		if(new_set == previous_set)
-		{
-			break;
-		}
-		previous_set = new_set;
-	}
+	pop_set = new_set;
+	return true;
 }

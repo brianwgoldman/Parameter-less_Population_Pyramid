@@ -12,9 +12,18 @@
 #include "Util.h"
 
 class LambdaLambda: public Optimizer {
+private:
+	vector<bool> solution;
+	float fitness;
+	float lambda;
+	vector<std::uniform_int_distribution<>> selectors;
+	vector<size_t> options;
+	vector<bool> mutate(const vector<bool>& parent, const int flips);
+	vector<bool> crossover(const vector<bool>& p1, const vector<bool>& p2, std::bernoulli_distribution& prob);
+
 public:
-	LambdaLambda(Configuration& config) {};
-	virtual void optimize(Random& rand, Evaluator& evaluator, Configuration& config) override;
+	LambdaLambda(Random& _rand, Evaluator& _evaluator, Configuration& _config);
+	virtual bool iterate() override;
 	create_optimizer(LambdaLambda);
 };
 

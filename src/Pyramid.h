@@ -20,15 +20,15 @@ class Pyramid: public Optimizer
 private:
 	vector<Population> pops;
 
-	bool add_unique(Random& rand, const vector<bool> & solution, size_t level);
-	size_t length;
-	Configuration config;
+	bool add_unique(const vector<bool> & solution, size_t level);
+	hill_climb::pointer hill_climber;
 public:
 	std::unordered_set<vector<bool>> seen;
-	Pyramid(Configuration& _config):
-		length(_config.get<int>("length")) {config = _config;}
-	void climb(Random& rand, vector<bool> & solution, float & fitness, Evaluator& evaluator);
-	void optimize(Random& rand, Evaluator& evaluator, Configuration& config) override;
+	Pyramid(Random& _rand, Evaluator& _evaluator, Configuration& _config):
+		Optimizer(_rand, _evaluator, _config),
+		hill_climber(_config.get<hill_climb::pointer>("hill_climber")) { }
+	void climb(vector<bool> & solution, float & fitness);
+	bool iterate() override;
 	create_optimizer(Pyramid);
 };
 

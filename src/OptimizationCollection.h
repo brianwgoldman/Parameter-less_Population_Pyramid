@@ -17,7 +17,7 @@
 
 namespace optimize
 {
-	using pointer=shared_ptr<Optimizer> (*)(Configuration& config);
+	using pointer=shared_ptr<Optimizer> (*)(Random& rand, Evaluator& evaluator, Configuration& config);
 
 	static std::unordered_map<string, pointer> lookup({
 			{"LTGA", LTGA::create},

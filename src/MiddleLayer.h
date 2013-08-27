@@ -9,6 +9,7 @@
 #define MIDDLELAYER_H_
 #include "Evaluation.h"
 #include <stdexcept>
+#include <numeric>
 #include "Record.h"
 
 class Middle_Layer: public Evaluator
@@ -17,7 +18,7 @@ protected:
 	shared_ptr<Evaluator> evaluator;
 
 public:
-	int counter;
+	size_t evaluations;
 	float best_fitness;
 	int best_found;
 	std::vector<bool> best_solution;

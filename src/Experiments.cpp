@@ -9,10 +9,15 @@
 
 Record single_run(Random& rand, Configuration& config, evaluation::pointer problem, optimize::pointer solver, int run)
 {
-	Middle_Layer layer(config, problem(config, run));
-	auto optimizer = solver(config);
-	optimizer->optimize(rand, layer, config);
-	return layer.results;
+	Middle_Layer recorder(config, problem(config, run));
+	auto optimizer = solver(rand, recorder, config);
+	size_t limit = config.get<int>("eval_limit");
+	bool improvement_possible=true;
+	while(recorder.best_fitness < 1.0 and recorder.evaluations < limit and improvement_possible)
+	{
+		improvement_possible = optimizer->iterate();
+	}
+	return recorder.results;
 }
 
 vector<Record> multirun(Random& rand, Configuration& config, evaluation::pointer problem, optimize::pointer solver)
@@ -55,9 +60,8 @@ int bisection(Random& rand, Configuration& config, evaluation::pointer problem, 
 		{
 			int problem_number = ((i + failed_on) % runs);
 			std::cout <<"\tTrying problem: " << problem_number << std:: endl;
-			Middle_Layer layer(config, problem(config, problem_number));
-			solver(config)->optimize(rand, layer, config);
-			if(layer.results.best().first < 1)
+			auto results = single_run(rand, config, problem, solver, problem_number);
+			if(results.best().first < 1)
 			{
 				failed_on = problem_number;
 				success = false;
@@ -77,9 +81,8 @@ int bisection(Random& rand, Configuration& config, evaluation::pointer problem, 
 		{
 			int problem_number = ((i + failed_on) % runs);
 			std::cout <<"\tTrying problem: " << problem_number << std:: endl;
-			Middle_Layer layer(config, problem(config, problem_number));
-			solver(config)->optimize(rand, layer, config);
-			if(layer.results.best().first < 1)
+			auto results = single_run(rand, config, problem, solver, problem_number);
+			if(results.best().first < 1)
 			{
 				failed_on = problem_number;
 				success = false;

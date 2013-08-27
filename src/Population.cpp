@@ -197,7 +197,7 @@ void Population::rebuild_tree(Random& rand)
 
 	// the last cluster contains all variables and is always useless
 	useful.back() = false;
-	// TODO TEST THIS
+
 	size_t kept=0;
 	for(size_t i=0; i < cluster_ordering.size(); i++)
 	{
