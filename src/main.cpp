@@ -36,8 +36,8 @@ int main(int argc, char * argv[])
 	}
 	rand.seed(seed);
 
-	string outfile = config.get<string>("outfile");
-	ofstream cfg_out(config.get<string>("cfg_outfile"));
+	string dat_file = config.get<string>("dat_file");
+	ofstream cfg_out(config.get<string>("cfg_file"));
 	config.dump(cfg_out);
 	cfg_out.close();
 
@@ -53,7 +53,7 @@ int main(int argc, char * argv[])
 	{
 		vector<Record> records = multirun(rand, config, problem, optimizer_method);
 		auto summary = Record::summarize(records);
-		ofstream out(outfile.c_str());
+		ofstream out(dat_file.c_str());
 		cout << summary[MES] << " " << summary[MAD] << " " << summary[FAILURES] << endl;
 		out << "# " << summary[MES] << " " << summary[MAD] << " " << summary[FAILURES] << endl;
 		for(const auto& record: records)
@@ -69,7 +69,7 @@ int main(int argc, char * argv[])
 	else // single_run
 	{
 		Record record = single_run(rand, config, problem, optimizer_method, 0);
-		ofstream out(outfile.c_str());
+		ofstream out(dat_file.c_str());
 		for(const auto& line: record.levels)
 		{
 			out << line.first <<" " << line.second << endl;
