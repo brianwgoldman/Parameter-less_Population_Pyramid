@@ -23,14 +23,11 @@ using namespace std;
 
 int main(int argc, char * argv[])
 {
-	Random rand;
 	Configuration config;
 	config.parse(argc, argv);
+
+	Random rand;
 	int seed = config.get<int>("seed");
-	string outfile = config.get<string>("outfile");
-	ofstream cfg_out(config.get<string>("cfg_outfile"));
-	config.dump(cfg_out);
-	cfg_out.close();
 	if(seed == -1)
 	{
 		std::random_device rd;
@@ -38,8 +35,15 @@ int main(int argc, char * argv[])
 		config.set("seed", seed);
 	}
 	rand.seed(seed);
+
+	string outfile = config.get<string>("outfile");
+	ofstream cfg_out(config.get<string>("cfg_outfile"));
+	config.dump(cfg_out);
+	cfg_out.close();
+
 	auto problem = config.get<evaluation::pointer>("problem");
 	auto optimizer_method = config.get<optimize::pointer>("optimizer");
+
 	if(config.get<string>("experiment") == "bisection")
 	{
 		int pop_size = bisection(rand, config, problem, optimizer_method);
@@ -62,7 +66,7 @@ int main(int argc, char * argv[])
 		}
 		out.close();
 	}
-	else
+	else // single_run
 	{
 		Record record = single_run(rand, config, problem, optimizer_method, 0);
 		ofstream out(outfile.c_str());
