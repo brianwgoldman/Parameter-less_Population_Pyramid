@@ -1,0 +1,6 @@
+optimizer Pyramid
+hill_climber first_improvement
+cluster_ordering smallest_first
+no_singles 0
+donate_until_different 1
+keep_zeros 0
