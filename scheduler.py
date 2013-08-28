@@ -43,7 +43,7 @@ def start_run(folder, repeats, pop_size):
             # touch the start file
             open(filename + ".start", 'w').close()
             extra = "-pop_size %i -outfile %s.dat -problem_seed %i -seed %i"
-            extra = extra % (pop_size, filename, i, i)
+            extra = extra % (pop_size, filename, i, i+1)
             combined = " ".join([executable, arguments, single_run, extra])
             print combined
             try:

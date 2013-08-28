@@ -1,5 +1,7 @@
 #PBS -l nodes=1:ppn=1
-#PBS -l walltime=39:59:59
+#PBS -l walltime=80:00:00
+#PBS -l mem=4gb
+#PBS -l pmem=4gb
 #PBS -j oe
 #PBS -N NAME
 #PBS -o /mnt/scratch/goldma72/NAME_${PBS_JOBID}.tmp
@@ -15,4 +17,4 @@ then
 fi
 
 # Runs the correct job
-timeout -s SIGINT 140000 python scheduler.py ARGUMENTS
+timeout -s SIGINT 280000 python scheduler.py ARGUMENTS
