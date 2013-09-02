@@ -13,8 +13,8 @@ signal.signal(signal.SIGINT, signal_handler)
 executable = path.join("Release", "P3")
 folder = "tuning"
 jobname = sys.argv[1]
-arguments = [path.join("config", "default.txt"),
-             path.join("config", "tune.txt"),
+arguments = [path.join("config", "default.cfg"),
+             path.join("config", "tune.cfg"),
              ]
 
 flag_titles = ['-problem', '-length', '-hill_climber', '-cluster_ordering',
@@ -41,7 +41,7 @@ for (problem, length) in [
                                     donate_until_different, keep_zeros]
                         flags = interleave(flag_titles, settings)
                         filename = path.join(folder, '.'.join(settings))
-                        combined = [executable] + arguments + flags + ['-outfile', filename + '.dat']
+                        combined = [executable] + arguments + flags + ['-dat_file', filename + '.dat']
 
                         if not path.exists(filename + ".dat") and not path.exists(filename + ".start"):
                             with open(filename + ".start", 'w') as f:

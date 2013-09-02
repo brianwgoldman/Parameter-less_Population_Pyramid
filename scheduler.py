@@ -14,7 +14,7 @@ executable = path.join("Release", "P3")
 folder = sys.argv[1]
 repeats = int(sys.argv[2])
 bound_file = path.join(folder, "bounds.txt")
-arguments = path.join("config", "default.txt ") + " ".join(sys.argv[3:])
+arguments = path.join("config", "default.cfg ") + " ".join(sys.argv[3:])
 single_run = "-experiment single_run"
 
 def update(least, most, maxed):
@@ -42,7 +42,7 @@ def start_run(folder, repeats, pop_size):
         if not path.exists(filename + ".dat") and not path.exists(filename + ".start"):
             # touch the start file
             open(filename + ".start", 'w').close()
-            extra = "-pop_size %i -outfile %s.dat -problem_seed %i -seed %i"
+            extra = "-pop_size %i -dat_file %s.dat -problem_seed %i -seed %i"
             extra = extra % (pop_size, filename, i, i+1)
             combined = " ".join([executable, arguments, single_run, extra])
             print combined
