@@ -12,9 +12,13 @@ void Pyramid::climb(vector<bool> & solution, float & fitness)
 	add_unique(solution, 0);
 	for(size_t level=0; level < pops.size(); level++)
 	{
+		float prev = fitness;
 		//use population clusters and population solutions to make new solution
 		pops[level].improve(rand, solution, fitness, evaluator);
-		add_unique(solution, level+1);
+		if(not only_add_improvements or prev < fitness)
+		{
+			add_unique(solution, level+1);
+		}
 	}
 }
 

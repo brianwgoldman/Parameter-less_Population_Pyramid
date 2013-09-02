@@ -100,6 +100,7 @@ bool LambdaLambda::iterate()
 			next_fitness = evaluator.evaluate(next);
 		}
 
+		// TODO Mention hamming distance, not in original paper
 		// replace if strictly better, or no worse but higher hamming distance
 		if(next_parent_fitness < next_fitness or
 				(next_parent_fitness == next_fitness and
@@ -119,7 +120,7 @@ bool LambdaLambda::iterate()
 			lambda = 1;
 		}
 	}
-	else
+	else // TODO Mention not the "Mod" version
 	{
 		// magic number for 1.5 ** 0.25
 		lambda *= 1.1067;
