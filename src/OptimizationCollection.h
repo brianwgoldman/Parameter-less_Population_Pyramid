@@ -15,17 +15,15 @@
 #include "LambdaLambda.h"
 #include <unordered_map>
 
-namespace optimize
-{
-	using pointer=shared_ptr<Optimizer> (*)(Random& rand, Evaluator& evaluator, Configuration& config);
+namespace optimize {
+using pointer=shared_ptr<Optimizer> (*)(Random& rand, Evaluator& evaluator, Configuration& config);
 
-	static std::unordered_map<string, pointer> lookup({
-			{"LTGA", LTGA::create},
-			{"Pyramid", Pyramid::create},
-			{"RandomRestartHC", RandomRestartHC::create},
-			{"LambdaLambda", LambdaLambda::create},
-		});
+static std::unordered_map<string, pointer> lookup( {
+  { "LTGA", LTGA::create },
+  { "Pyramid", Pyramid::create },
+  { "RandomRestartHC", RandomRestartHC::create },
+  { "LambdaLambda", LambdaLambda::create },
+});
 }
-
 
 #endif /* OPTIMIZATIONCOLLECTION_H_ */

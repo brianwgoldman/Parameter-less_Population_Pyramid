@@ -20,29 +20,27 @@
 using std::unordered_map;
 using std::string;
 
-class Configuration
-{
-private:
-	unordered_map<string, string> data;
-public:
+class Configuration {
+ public:
 
-	Configuration() = default;
-	virtual ~Configuration() = default;
+  Configuration() = default;
+  virtual ~Configuration() = default;
 
-	void parse(int argc, char * argv[]);
-	void parse(char filename[]);
+  void parse(int argc, char * argv[]);
+  void parse(char filename[]);
 
-	void dump(std::ostream& out);
+  void dump(std::ostream& out);
 
-	template <class T>
-	T get(const string key);
+  template<class T>
+  T get(const string key);
 
-	template <class T>
-	void set(const string key, const T value)
-	{
-		data[key] = std::to_string(value);
-	}
+  template<class T>
+  void set(const string key, const T value) {
+    data[key] = std::to_string(value);
+  }
+
+ private:
+  unordered_map<string, string> data;
 };
-
 
 #endif /* CONFIGURAITON_H_ */

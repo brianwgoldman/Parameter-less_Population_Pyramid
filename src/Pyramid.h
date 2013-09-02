@@ -15,23 +15,24 @@
 #include "Configuration.h"
 #include "Optimizer.h"
 
-class Pyramid: public Optimizer
-{
-private:
-	vector<Population> pops;
+class Pyramid : public Optimizer {
+ public:
+  Pyramid(Random& _rand, Evaluator& _evaluator, Configuration& _config)
+      : Optimizer(_rand, _evaluator, _config),
+        only_add_improvements(_config.get<int>("only_add_improvements")),
+        hill_climber(_config.get<hill_climb::pointer>("hill_climber")) {
+  }
+  void climb(vector<bool> & solution, float & fitness);
+  bool iterate() override;create_optimizer(Pyramid);
 
-	bool add_unique(const vector<bool> & solution, size_t level);
-	bool only_add_improvements;
-	hill_climb::pointer hill_climber;
-public:
-	std::unordered_set<vector<bool>> seen;
-	Pyramid(Random& _rand, Evaluator& _evaluator, Configuration& _config):
-		Optimizer(_rand, _evaluator, _config),
-		only_add_improvements(_config.get<int>("only_add_improvements")),
-		hill_climber(_config.get<hill_climb::pointer>("hill_climber")) { }
-	void climb(vector<bool> & solution, float & fitness);
-	bool iterate() override;
-	create_optimizer(Pyramid);
+ private:
+  bool add_unique(const vector<bool> & solution, size_t level);
+
+  vector<Population> pops;
+  std::unordered_set<vector<bool>> seen;
+  bool only_add_improvements;
+  hill_climb::pointer hill_climber;
+
 };
 
 #endif /* PYRAMID_H_ */

@@ -7,10 +7,8 @@
 
 #include "OptimizationCollection.h"
 
-template <>
-optimize::pointer Configuration::get(const string key)
-{
-	return optimize::lookup[get<string>(key)];
+template<>
+optimize::pointer Configuration::get(const string key) {
+  return optimize::lookup[get<string>(key)];
 }
-
 
