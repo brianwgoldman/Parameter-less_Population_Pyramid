@@ -63,6 +63,7 @@ while True:
         with open(bound_file, 'r') as f:
             least, most, maxed = map(int, f.read().strip().split())
     except (IOError, ValueError):
+        print "No Bounds file"
         least, most, maxed = 0, 1, 0
 
     while maxed == 0:
