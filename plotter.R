@@ -8,7 +8,7 @@ data <- read.csv("tmp.csv", header=TRUE)
 # If the best found in the run is less than 1, mark it as NA
 data$evaluations[data$fitness<1] <- NA
 
-cbMine <- c("#CC79A7", "#E69F00", "#56B4E9", "#000000")
+cbMine <- c("#CC79A7", "#E69F00", "#56B4E9", "#000000", "#D55E00")
 
 SetupImage <- function(image_name, width=1000, height=800) {
   png(image_name, width=width, height=height)
@@ -60,11 +60,11 @@ grid.arrange(arrangeGrob(
              group_legend, widths=c(4/5, 1/5), ncol=2)
 dev.off()
 
-SetupImage("WithRast.png", 880, 550)
+SetupImage("WithRast.png", 900, 550)
 grid.arrange(arrangeGrob(p1 + nl + labs(title="Deceptive Trap", x=NULL, y=NULL)),
              arrangeGrob(p2 + nl + labs(title="Deceptive Step Trap", x=NULL, y=NULL)),
              arrangeGrob(p3 + nl + labs(title="HIFF", x=NULL, y=NULL)),
-             arrangeGrob(p7 + nl + labs(title="Rastrigin", x=NULL, y=NULL)),
+             arrangeGrob(p7 + nl + labs(title="Discretized Rastrigin", x=NULL, y=NULL)),
              arrangeGrob(p4 + nl + labs(title="Nearest Neighbor NK", x=NULL, y=NULL)),
              arrangeGrob(p5 + nl + labs(title="Ising Spin Glass", x=NULL, y=NULL)),
              arrangeGrob(p6 + nl + labs(title="MAX-SAT", x=NULL, y=NULL)),
