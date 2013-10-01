@@ -386,6 +386,7 @@ IsingSpinGlass::IsingSpinGlass(Configuration& config, int run_number)
   // Build up the filename where this problem is stored
   string filename = config.get<string>("problem_folder");
   filename += +"IsingSpinGlass_";
+  filename += config.get<string>("ising_type") + "_";
   filename += config.get<string>("length") + "_";
   filename += to_string(rng_seed) + ".txt";
   ifstream in(filename.c_str());
@@ -393,17 +394,19 @@ IsingSpinGlass::IsingSpinGlass(Configuration& config, int run_number)
     throw invalid_argument(
         "IsingSpinGlass data file does not exist: " + filename);
   }
-  spins.resize(length * 2);
   in >> min_energy;
-  span = length * 2 - min_energy;
   string solution_string;
   in >> solution_string;
+  int number_of_spins;
+  in >> number_of_spins;
+  spins.resize(number_of_spins);
   for (auto& spin : spins) {
     for (auto& part : spin) {
       in >> part;
     }
   }
   in.close();
+  span = number_of_spins - min_energy;
 
   // Sanity check
   vector<bool> solution(length);
