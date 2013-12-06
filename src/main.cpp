@@ -46,7 +46,7 @@ int main(int argc, char * argv[]) {
     cout << "POP SIZE " << pop_size << endl;
   } else if (config.get<string>("experiment") == "multirun") {
     vector<Record> records = multirun(rand, config, problem, optimizer_method);
-    auto summary = Record::summarize(records);
+    auto summary = Record::summarize(records, config);
     ofstream out(dat_file.c_str());
     cout << summary[MES] << " " << summary[MAD] << " ";
     cout << summary[FAILURES] << endl;

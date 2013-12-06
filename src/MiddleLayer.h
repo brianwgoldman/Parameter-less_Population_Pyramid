@@ -8,8 +8,10 @@
 #ifndef MIDDLELAYER_H_
 #define MIDDLELAYER_H_
 #include "Evaluation.h"
+#include "Util.h"
 #include <stdexcept>
 #include <numeric>
+#include <fstream>
 #include "Record.h"
 
 class Middle_Layer : public Evaluator {
@@ -19,11 +21,13 @@ class Middle_Layer : public Evaluator {
   int best_found;
   std::vector<bool> best_solution;
   Record results;
+  string outfile;
   Middle_Layer(Configuration& config, shared_ptr<Evaluator> evaler)
       : evaluations(0),
         best_fitness(std::numeric_limits<float>::min()),
         best_found(0),
         results(config),
+        outfile(config.get<string>("solution_file")),
         evaluator(evaler) {
   }
   virtual float evaluate(const vector<bool> & solution) override;

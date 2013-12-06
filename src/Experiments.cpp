@@ -11,13 +11,14 @@ Record single_run(Random& rand, Configuration& config,
                   evaluation::pointer problem, optimize::pointer solver,
                   int run) {
   size_t limit = config.get<int>("eval_limit");
+  float good_enough = config.get<int>("fitness_limit");
   Middle_Layer recorder(config, problem(config, run));
   auto optimizer = solver(rand, recorder, config);
 
   // Iterate the optimizer until the solution is reached, the maximum number
   // of evaluations is performed, or the optimizer reaches stagnation
   bool improvement_possible = true;
-  while (recorder.best_fitness < 1.0 and recorder.evaluations < limit
+  while (recorder.best_fitness < good_enough and recorder.evaluations < limit
       and improvement_possible) {
     improvement_possible = optimizer->iterate();
   }
@@ -31,8 +32,8 @@ vector<Record> multirun(Random& rand, Configuration& config,
   vector<Record> records;
   for (int run = 0; run < runs; run++) {
     records.push_back(single_run(rand, config, problem, solver, run));
-    auto summary = Record::summarize(records);
     if (verbosity > 0) {
+      auto summary = Record::summarize(records, config);
       std::cout << "Run: " << run << " Evals: "
                 << records[records.size() - 1].best().second << " MES: "
                 << summary[MES] << " MAD: " << summary[MAD] << " FAILURES: "
@@ -45,6 +46,7 @@ vector<Record> multirun(Random& rand, Configuration& config,
 int bisection(Random& rand, Configuration& config, evaluation::pointer problem,
               optimize::pointer solver) {
   int runs = config.get<int>("runs");
+  float good_enough = config.get<int>("fitness_limit");
   vector<Record> records;
   int min = 0;
   int max = 1;
@@ -61,7 +63,7 @@ int bisection(Random& rand, Configuration& config, evaluation::pointer problem,
       int problem_number = ((i + failed_on) % runs);
       std::cout << "\tTrying problem: " << problem_number << std::endl;
       auto results = single_run(rand, config, problem, solver, problem_number);
-      if (results.best().first < 1) {
+      if (results.best().first < good_enough) {
         failed_on = problem_number;
         success = false;
       }
@@ -79,7 +81,7 @@ int bisection(Random& rand, Configuration& config, evaluation::pointer problem,
       int problem_number = ((i + failed_on) % runs);
       std::cout << "\tTrying problem: " << problem_number << std::endl;
       auto results = single_run(rand, config, problem, solver, problem_number);
-      if (results.best().first < 1) {
+      if (results.best().first < good_enough) {
         failed_on = problem_number;
         success = false;
       }

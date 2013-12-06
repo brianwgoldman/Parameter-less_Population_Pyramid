@@ -462,3 +462,17 @@ float Rastrigin::evaluate(const vector<bool>& solution) {
   total /= (n * worst);
   return float_round(1 - total, precision);
 }
+
+float External::evaluate(const vector<bool>& solution) {
+  ofstream output(out_file);
+  print(solution, output);
+  output.close();
+  int error_code = system(script_file.c_str());
+  if(error_code) {
+    throw invalid_argument("Script file returned non zero success");
+  }
+  ifstream input(in_file);
+  float fitness;
+  input >> fitness;
+  return fitness;
+}

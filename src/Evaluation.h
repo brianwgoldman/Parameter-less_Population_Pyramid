@@ -39,7 +39,6 @@ class OneMax : public Evaluator {
  public:
   OneMax(Configuration& config, int run_number) {
   }
-  ;
   float evaluate(const vector<bool> & solution) override;create_evaluator(OneMax);
 };
 
@@ -159,6 +158,21 @@ class Rastrigin : public Evaluator {
   float worst;
 };
 
+class External : public Evaluator {
+ public:
+  External(Configuration& config, int run_number)
+     : script_file(config.get<string>("script_path")),
+       out_file(config.get<string>("external_out")),
+       in_file(config.get<string>("external_in")){
+  }
+  float evaluate(const vector<bool> & solution) override;
+  create_evaluator(External);
+ private:
+  string script_file;
+  string out_file;
+  string in_file;
+};
+
 namespace evaluation {
 using pointer=shared_ptr<Evaluator> (*)(Configuration &, int);
 static std::unordered_map<string, pointer> lookup( {
@@ -171,6 +185,7 @@ static std::unordered_map<string, pointer> lookup( {
     { "MAXSAT", MAXSAT::create },
     { "IsingSpinGlass", IsingSpinGlass::create },
     { "Rastrigin", Rastrigin::create },
+    { "External", External::create },
 });
 }
 

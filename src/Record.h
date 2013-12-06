@@ -33,7 +33,7 @@ class Record {
   virtual ~Record() = default;
   void add(float fitness, int evals);
   const pair<float, int>& best() const;
-  static array<int, 3> summarize(const vector<Record>& records);
+  static array<int, 3> summarize(const vector<Record>& records, Configuration& config);
 
   vector<pair<float, int>> levels;
 
