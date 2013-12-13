@@ -3,15 +3,16 @@ library(ggplot2)
 library(scales)
 library(gridExtra)
 
-data <- read.csv("tmp.csv", header=TRUE)
+data <- read.csv("complete.csv", header=TRUE)
 
 # If the best found in the run is less than 1, mark it as NA
 data$evaluations[data$fitness<1] <- NA
 
 cbMine <- c("#CC79A7", "#E69F00", "#56B4E9", "#000000", "#D55E00")
 
-SetupImage <- function(image_name, width=1000, height=800) {
-  png(image_name, width=width, height=height)
+SetupImage <- function(image_name) {
+  postscript(image_name, width=11, height=6.7, paper="special",
+             horizontal=FALSE)
 }
 
 
@@ -48,7 +49,7 @@ leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
 group_legend <- tmp$grobs[[leg]]
 nl <- theme(legend.position="none")
 
-SetupImage("AllPlots.png", 800, 500)
+SetupImage("AllPlots.eps")
 grid.arrange(arrangeGrob(
              arrangeGrob(p1 + nl + labs(title="Deceptive Trap", x=NULL, y=NULL)),
              arrangeGrob(p2 + nl + labs(title="Deceptive Step Trap", x=NULL, y=NULL)),
@@ -60,7 +61,7 @@ grid.arrange(arrangeGrob(
              group_legend, widths=c(4/5, 1/5), ncol=2)
 dev.off()
 
-SetupImage("WithRast.png", 900, 550)
+SetupImage("WithRast.eps")
 grid.arrange(arrangeGrob(p1 + nl + labs(title="Deceptive Trap", x=NULL, y=NULL)),
              arrangeGrob(p2 + nl + labs(title="Deceptive Step Trap", x=NULL, y=NULL)),
              arrangeGrob(p3 + nl + labs(title="HIFF", x=NULL, y=NULL)),
