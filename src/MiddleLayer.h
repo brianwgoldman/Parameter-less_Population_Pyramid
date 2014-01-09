@@ -24,7 +24,7 @@ class Middle_Layer : public Evaluator {
   string outfile;
   Middle_Layer(Configuration& config, shared_ptr<Evaluator> evaler)
       : evaluations(0),
-        best_fitness(std::numeric_limits<float>::min()),
+        best_fitness(std::numeric_limits<int>::min()),
         best_found(0),
         results(config),
         outfile(config.get<string>("solution_file")),
