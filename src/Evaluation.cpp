@@ -389,7 +389,7 @@ IsingSpinGlass::IsingSpinGlass(Configuration& config, int run_number)
   filename += config.get<string>("ising_type") + "_";
   filename += config.get<string>("length") + "_";
   filename += to_string(rng_seed) + ".txt";
-  ifstream in(filename.c_str());
+  ifstream in(filename);
   if (!in) {
     throw invalid_argument(
         "IsingSpinGlass data file does not exist: " + filename);

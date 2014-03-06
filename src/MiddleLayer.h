@@ -22,12 +22,14 @@ class Middle_Layer : public Evaluator {
   std::vector<bool> best_solution;
   Record results;
   string outfile;
+  bool disable_solution_outfile;
   Middle_Layer(Configuration& config, shared_ptr<Evaluator> evaler)
       : evaluations(0),
         best_fitness(std::numeric_limits<int>::min()),
         best_found(0),
         results(config),
         outfile(config.get<string>("solution_file")),
+        disable_solution_outfile(config.get<int>("disable_solution_outfile")),
         evaluator(evaler) {
   }
   virtual float evaluate(const vector<bool> & solution) override;

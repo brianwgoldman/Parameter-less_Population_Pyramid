@@ -15,9 +15,11 @@ float Middle_Layer::evaluate(const vector<bool>& solution) {
     best_solution = solution;
     best_found = evaluations;
     results.add(fitness, evaluations);
-    std::ofstream output(outfile, std::fstream::app);
-    output << best_fitness << " " << evaluations << " ";
-    print(best_solution, output);
+    if (not disable_solution_outfile) {
+      std::ofstream output(outfile, std::fstream::app);
+      output << best_fitness << " " << evaluations << " ";
+      print(best_solution, output);
+    }
   }
   return fitness;
 }

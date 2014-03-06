@@ -47,7 +47,7 @@ int main(int argc, char * argv[]) {
   } else if (config.get<string>("experiment") == "multirun") {
     vector<Record> records = multirun(rand, config, problem, optimizer_method);
     auto summary = Record::summarize(records, config);
-    ofstream out(dat_file.c_str());
+    ofstream out(dat_file);
     cout << summary[MES] << " " << summary[MAD] << " ";
     cout << summary[FAILURES] << endl;
     out << "# " << summary[MES] << " " << summary[MAD] << " ";
