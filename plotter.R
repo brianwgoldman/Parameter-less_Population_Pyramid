@@ -34,7 +34,7 @@ make_plot <- function(data, problem_name) {
   plt <- plt + scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
                 labels = trans_format("log10", math_format(10^.x)))
   plt <- plt + scale_color_manual(values=cbMine)
-  return(plt)
+  return(plt + theme(legend.title=element_blank()))
 }
 p1 <- make_plot(data, "DeceptiveTrap")
 p2 <- make_plot(data, "DeceptiveStepTrap")
