@@ -44,7 +44,7 @@ all: P3
 P3: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -std=c++11 -pg -o "P3" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -pg -o "P3" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
