@@ -1,18 +1,19 @@
-/*
- * Evaluation.cpp
- *
- *  Created on: Jun 24, 2013
- *      Author: goldman
- */
+// Brian Goldman
+
+// Each evaluation object defines the "evaluate" function for how
+// to convert the vector of bool solution into a floating point fitness.
 
 #include "Evaluation.h"
 using namespace std;
 
+// Template specialization to convert a string to a function pointer
+// Used to allow configurable problem choice
 template<>
 evaluation::pointer Configuration::get(const string key) {
   return evaluation::lookup[get<string>(key)];
 }
 
+// Simple example for how to do evaluation
 float OneMax::evaluate(const vector<bool> & solution) {
   float sum = 0;
   for (const bool & bit : solution) {
@@ -22,6 +23,7 @@ float OneMax::evaluate(const vector<bool> & solution) {
   return sum / solution.size();
 }
 
+// Iterate over traps, sum partial scores
 float DeceptiveTrap::evaluate(const vector<bool> & solution) {
   int partial;
   int total = 0;
@@ -44,6 +46,7 @@ float DeceptiveTrap::evaluate(const vector<bool> & solution) {
   return float_round(float(total) / solution.size(), precision);
 }
 
+// Iterate over traps, sum partial scores
 float DeceptiveStepTrap::evaluate(const vector<bool> & solution) {
   int partial;
   int total = 0;
@@ -70,6 +73,8 @@ float DeceptiveStepTrap::evaluate(const vector<bool> & solution) {
   return float_round(fitness, precision);
 }
 
+// Attempts to load the problem file, otherwise constructs a new problem
+// solves it, and saves it to a problem file
 NearestNeighborNK::NearestNeighborNK(Configuration& config, int run_number) {
   k = config.get<int>("k");
   length = config.get<int>("length");
@@ -145,6 +150,8 @@ NearestNeighborNK::NearestNeighborNK(Configuration& config, int run_number) {
   }
 }
 
+// Used in finding the minimum / maximum of the generated problem.
+//
 float NearestNeighborNK::chunk_fitness(trimap& known, size_t chunk_index,
                                        size_t a, size_t b) {
   // If we know the fitness, return it
@@ -176,21 +183,30 @@ float NearestNeighborNK::chunk_fitness(trimap& known, size_t chunk_index,
   return fitness;
 }
 
+// Converts a number into a series of bits
 void NearestNeighborNK::int_into_bit(size_t src, vector<bool>& dest) {
   for (size_t i = 1; i <= k; i++) {
     dest.push_back((src >> (k - i)) & 1);
   }
 }
 
+// Find either the minimum or maximum (depending on the last argument) of the problem
+// See the following paper for full explanation:
+// "The computational complexity of N-K fitness functions"
+// by A. H. Wright, R. K. Thompson, and J. Zhang
 float NearestNeighborNK::solve(vector<bool>& solution, bool maximize) {
   size_t numbers = 1 << k;
   trimap known;
   std::unordered_map<size_t,
       std::unordered_map<size_t, std::unordered_map<size_t, size_t> > > partial;
   float current;
+  // Iteratively build up partial values and their fitnesses
   for (size_t n = length / k - 1; n > 1; n--) {
+    // stores the fitness of settings
     std::unordered_map<size_t, std::unordered_map<size_t, float> > utility;
+    // stores the bit values that achieve best partial fitnesses
     std::unordered_map<size_t, std::unordered_map<size_t, size_t> > value;
+    // Loop through the pieces
     for (size_t left = 0; left < numbers; left++) {
       for (size_t right = 0; right < numbers; right++) {
         utility[left][right] = -1;
@@ -254,6 +270,7 @@ float NearestNeighborNK::solve(vector<bool>& solution, bool maximize) {
   return fitness;
 }
 
+// Use the table to evaluate the quality of the solution
 float NearestNeighborNK::evaluate(const vector<bool> & solution) {
   float total = 0;
   for (size_t i = 0; i < solution.size(); i++) {
@@ -262,6 +279,7 @@ float NearestNeighborNK::evaluate(const vector<bool> & solution) {
     for (size_t neighbor = i; neighbor <= i + k; neighbor++) {
       index = (index << 1) | solution[neighbor % length];
     }
+    // Look up that bit combination in the table
     total += table[i][index];
   }
 
@@ -271,15 +289,18 @@ float NearestNeighborNK::evaluate(const vector<bool> & solution) {
   return float_round(fitness, precision);
 }
 
+// Simple evaluation, stop counting when a 0 is found
 float LeadingOnes::evaluate(const vector<bool> & solution) {
   for (size_t i = 0; i < solution.size(); i++) {
     if (not solution[i]) {
       return float_round(float(i) / solution.size(), precision);
     }
   }
+  // only reach here if all bits are set to 1
   return 1;
 }
 
+// Score the solution at iteratively larger block sizes
 float HIFF::evaluate(const vector<bool> & solution) {
   // Data structure used to represent values as 0, 1, or -1 (Null)
   int * level = new int[solution.size()];
@@ -321,6 +342,8 @@ float HIFF::evaluate(const vector<bool> & solution) {
   return float(total) / maximum;
 }
 
+// Generates the new problem each time its needed, based on
+// the problem see and run number
 MAXSAT::MAXSAT(Configuration& config, int run_number) {
   size_t length = config.get<int>("length");
   precision = config.get<int>("precision");
@@ -363,10 +386,12 @@ MAXSAT::MAXSAT(Configuration& config, int run_number) {
   }
 }
 
+// Count how many clauses evaluate to true
 float MAXSAT::evaluate(const vector<bool> & solution) {
   int total = 0;
   for (size_t i = 0; i < clauses.size(); i++) {
     for (size_t c = 0; c < 3; c++) {
+      // if the literal is true, move to the next clause
       if (solution[clauses[i][c]] == signs[i][c]) {
         total++;
         break;
@@ -378,6 +403,7 @@ float MAXSAT::evaluate(const vector<bool> & solution) {
   return float_round(float(total) / clauses.size(), precision);
 }
 
+// Read in the problem from a file and set up the evaluation table
 IsingSpinGlass::IsingSpinGlass(Configuration& config, int run_number)
     : length(config.get<int>("length")),
       precision(config.get<int>("precision")) {
@@ -419,6 +445,7 @@ IsingSpinGlass::IsingSpinGlass(Configuration& config, int run_number)
   }
 }
 
+// Evaluate using the read in spins
 float IsingSpinGlass::evaluate(const vector<bool>& solution) {
   int energy = 0;
   for (const auto& spin : spins) {
@@ -430,6 +457,8 @@ float IsingSpinGlass::evaluate(const vector<bool>& solution) {
   return float_round(1 - (energy - min_energy) / span, precision);
 }
 
+// Sets up a table of fitness function values based on possible gray
+// value settings
 Rastrigin::Rastrigin(Configuration& config, int run_number)
     : precision(config.get<int>("precision")),
       converter(
@@ -446,6 +475,7 @@ Rastrigin::Rastrigin(Configuration& config, int run_number)
   }
 }
 
+// Converts each group of bits into a grey value, then look up the fitness
 float Rastrigin::evaluate(const vector<bool>& solution) {
   auto it = solution.begin();
   float x, total = 0;
@@ -463,14 +493,20 @@ float Rastrigin::evaluate(const vector<bool>& solution) {
   return float_round(1 - total, precision);
 }
 
+// Call the external script file to perform evaluation
 float External::evaluate(const vector<bool>& solution) {
+  // write the solution to the output file
   ofstream output(out_file);
   print(solution, output);
   output.close();
+
+  // calls the script file
   int error_code = system(script_file.c_str());
   if(error_code) {
     throw invalid_argument("Script file returned non zero success");
   }
+
+  // read the fitness from the input file
   ifstream input(in_file);
   float fitness;
   input >> fitness;

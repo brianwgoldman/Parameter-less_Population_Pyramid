@@ -1,16 +1,19 @@
-/*
- * Configuration.cpp
- *
- *  Created on: Jul 4, 2013
- *      Author: goldman
- */
+// Created: Brian Goldman
+
+// The configuration class is just a wrapper around
+// loading dictionaries from the command line / files
+// and making the contents available using desired types.
+
 
 #include "Configuration.h"
 using namespace std;
 
+// Command line arguments starting with a - are considered
+// keys, with the following argument then used as the value.
+// Everything else is considered a filename.
 void Configuration::parse(int argc, char* argv[]) {
-  int working = 1;
-  while (working < argc) {
+  for (int working=1; working < argc; working++) {
+    // key found
     if (argv[working][0] == '-') {
       string key = string(argv[working] + 1);
       working++;
@@ -19,10 +22,11 @@ void Configuration::parse(int argc, char* argv[]) {
     } else {
       parse(argv[working]);
     }
-    working++;
   }
 }
 
+// Loads a configuration file, assumes the file is
+// formatted as space separated key value pairs of strings
 void Configuration::parse(char filename[]) {
   ifstream in(filename);
   string key;
@@ -31,19 +35,18 @@ void Configuration::parse(char filename[]) {
     throw invalid_argument(
         "Configuration file does not exist: " + string(filename));
   }
-  while (in) {
-    in >> key;
-    if (key.length() == 0) {
-      break;
-    } else if (key[0] == '#') {
+  while (in >> key) {
+    // Ignore lines starting with a #
+    if (key[0] == '#') {
       in.ignore(1024, '\n');
-    } else if (in) {
-      in >> value;
+    } else if (in >> value) {
       data[key] = value;
     }
   }
 }
 
+// Prints the key value pairs in sorted order,
+// one pair per line
 void Configuration::dump(ostream& out) {
   vector<pair<string, string> > sortable;
   for (const auto& it : data) {
@@ -55,6 +58,8 @@ void Configuration::dump(ostream& out) {
   }
 }
 
+// Template specialized for strings, protects
+// against accessing invalid keys
 template<>
 string Configuration::get(const string key) {
   auto it = data.find(key);
@@ -65,11 +70,13 @@ string Configuration::get(const string key) {
   return it->second;
 }
 
+// Template specialized on integer
 template<>
 int Configuration::get(const string key) {
   return atoi(get<string>(key).c_str());
 }
 
+// Template specialized on float
 template<>
 float Configuration::get(const string key) {
   return atof(get<string>(key).c_str());

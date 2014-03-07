@@ -7,11 +7,13 @@
 
 #include "Experiments.h"
 
+// A single run of optimization
 Record single_run(Random& rand, Configuration& config,
                   evaluation::pointer problem, optimize::pointer solver,
                   int run) {
   size_t limit = config.get<int>("eval_limit");
   float good_enough = config.get<int>("fitness_limit");
+  // Middle Layer's sit between the problem and the solver, tracking optimization
   Middle_Layer recorder(config, problem(config, run));
   auto optimizer = solver(rand, recorder, config);
 
@@ -25,13 +27,16 @@ Record single_run(Random& rand, Configuration& config,
   return recorder.results;
 }
 
+// Performs multiple runs of optization
 vector<Record> multirun(Random& rand, Configuration& config,
                         evaluation::pointer problem, optimize::pointer solver) {
   int runs = config.get<int>("runs");
   int verbosity = config.get<int>("verbosity");
   vector<Record> records;
+  // perform the desired number of runs
   for (int run = 0; run < runs; run++) {
     records.push_back(single_run(rand, config, problem, solver, run));
+    // output partial summaries
     if (verbosity > 0) {
       auto summary = Record::summarize(records, config);
       std::cout << "Run: " << run << " Evals: "
@@ -43,22 +48,27 @@ vector<Record> multirun(Random& rand, Configuration& config,
   return records;
 }
 
+// Determine the minimum useful population size
 int bisection(Random& rand, Configuration& config, evaluation::pointer problem,
               optimize::pointer solver) {
   int runs = config.get<int>("runs");
   float good_enough = config.get<int>("fitness_limit");
   vector<Record> records;
+  // initial bounds
   int min = 0;
   int max = 1;
   size_t failed_on = 0;
   bool success;
   // Double the maximum size until a successful run is found
   do {
+    // double the bounds each time
     min = max;
     max *= 2;
     config.set("pop_size", max);
     std::cout << "Pop size: " << max << std::endl;
     success = true;
+    // Perform multiple runs, stopping as soon as one of the runs failed to find
+    // the global optimum
     for (int i = 0; success and i < runs; i++) {
       int problem_number = ((i + failed_on) % runs);
       std::cout << "\tTrying problem: " << problem_number << std::endl;
@@ -77,6 +87,8 @@ int bisection(Random& rand, Configuration& config, evaluation::pointer problem,
     std::cout << "Pop size: " << guess << std::endl;
     config.set("pop_size", guess);
     success = true;
+    // Perform multiple runs, stopping as soon as one of the runs failed to find
+    // the global optimum
     for (int i = 0; success and i < runs; i++) {
       int problem_number = ((i + failed_on) % runs);
       std::cout << "\tTrying problem: " << problem_number << std::endl;
@@ -86,6 +98,7 @@ int bisection(Random& rand, Configuration& config, evaluation::pointer problem,
         success = false;
       }
     }
+    // update the bound
     if (success) {
       max = guess;
     } else {

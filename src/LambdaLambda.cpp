@@ -1,17 +1,25 @@
-/*
- * LambdaLambda.cpp
- *
- *  Created on: Aug 22, 2013
- *      Author: goldman
- */
+// Brian Goldman
+
+// Implementation of the 1+(lambda,lambda) algorithm
+// Includes the following modifications from the original paper:
+// * Keeps best mutant if it has a higher fitness than the best crossover offspring
+// * Prevents duplicated evaluations when the crossover offspring is identical to
+//   one of its parents
+// * If two crossover offspring have the same fitness, selects the one with maximum hamming
+//   distance from the parent
+// * If lamdba exceeds the solution length, reset lambda to 1 and start from a new randomly
+//   generated solution
+
 
 #include "LambdaLambda.h"
 
+// Constructs some tools used during evolution, performs initial evaluation
 LambdaLambda::LambdaLambda(Random& _rand, Evaluator& _evaluator,
                            Configuration& _config)
     : Optimizer(_rand, _evaluator, _config),
       selectors(length),
       options(length) {
+  // create and evaluate initial solution
   solution = rand_vector(rand, length);
   fitness = evaluator.evaluate(solution);
   lambda = 1;
@@ -23,6 +31,7 @@ LambdaLambda::LambdaLambda(Random& _rand, Evaluator& _evaluator,
   std::iota(options.begin(), options.end(), 0);
 }
 
+// Selects "flips" number of random locations to perform bit flips.
 vector<bool> LambdaLambda::mutate(const vector<bool>& parent, const int flips) {
   vector<bool> mutant(solution);
   for (int j = 0; j < flips; j++) {
@@ -34,6 +43,7 @@ vector<bool> LambdaLambda::mutate(const vector<bool>& parent, const int flips) {
   return mutant;
 }
 
+// Uses the "prob" to determine if a gene should come from p1 or p2
 vector<bool> LambdaLambda::crossover(const vector<bool>& p1,
                                      const vector<bool>& p2,
                                      std::bernoulli_distribution& prob) {
@@ -48,6 +58,7 @@ vector<bool> LambdaLambda::crossover(const vector<bool>& p1,
   return offspring;
 }
 
+// Performs a full generation of the algorithm.
 bool LambdaLambda::iterate() {
   // Variables for number of offspring / mutation rate
   int flips;
@@ -55,6 +66,7 @@ bool LambdaLambda::iterate() {
   // Distributions needed at the current lambda
   std::binomial_distribution<> binom(length, lambda / length);
   std::bernoulli_distribution cross(1 / lambda);
+  // Ensures you do at least 1 flip
   do {
     flips = binom(rand);
   } while (flips == 0);
@@ -71,15 +83,15 @@ bool LambdaLambda::iterate() {
     }
   }
 
-  // TODO Determine if you should keep best mutation if its better than all crossover
   // Crossover loop
+  // Keeps the best mutation offspring if its better than all crossover
   vector<bool> next_parent(best_offspring);
   float next_parent_fitness = best_offspring_fitness;
   float next_fitness;
   for (int i = 0; i < round(lambda); i++) {
     vector<bool> next = crossover(solution, best_offspring, cross);
 
-    // TODO Mention that you prevent these evaluations
+    // Prevents duplicated evaluations
     if (next == solution) {
       next_fitness = fitness;
     } else if (next == best_offspring) {
@@ -88,8 +100,7 @@ bool LambdaLambda::iterate() {
       next_fitness = evaluator.evaluate(next);
     }
 
-    // TODO Mention hamming distance, not in original paper
-    // Replace if strictly better, or no worse but higher hamming distance
+    // Replace if strictly better, or no worse with a higher hamming distance
     if (next_parent_fitness < next_fitness
         or (next_parent_fitness == next_fitness
             and hamming_distance(solution, next_parent)
@@ -99,9 +110,9 @@ bool LambdaLambda::iterate() {
     }
   }
 
-  // TODO Mention not the "Mod" version
+  // update lambda
   if (fitness < next_parent_fitness) {
-    // Magic number from paper
+    // Magic number from the original paper
     lambda = lambda / 1.5;
     if (lambda < 1) {
       lambda = 1;
@@ -111,16 +122,18 @@ bool LambdaLambda::iterate() {
     lambda *= 1.1067;
   }
 
+  // only replace parent if offspring was no worse
   if (fitness <= next_parent_fitness) {
     fitness = next_parent_fitness;
     solution = next_parent;
   }
 
-  // TODO Mention that you do this restart mechanism
+  // If lambda exceeds the solution length, restart everything from a random solution
   if (lambda >= length) {
     solution = rand_vector(rand, length);
     fitness = evaluator.evaluate(solution);
     lambda = 1;
   }
+  // This algorithm never reaches stagnation, so always return true
   return true;
 }
