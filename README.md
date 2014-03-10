@@ -24,4 +24,4 @@ Release/P3 config/default.cfg config/alt1.cfg -problem NearestNeighborNK -length
 This line will use the default configuration, replacing configuration values with those
 found in alt1.cfg, setting the problem to Nearest Neighbor NK with a genome size of 50.
 
-
+Also, see main.cpp for other details.

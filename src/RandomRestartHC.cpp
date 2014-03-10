@@ -1,12 +1,11 @@
-/*
- * RandomRestartHC.cpp
- *
- *  Created on: Jul 18, 2013
- *      Author: goldman
- */
+// Brian Goldman
+
+// Trival implementation of repeated local search
 
 #include "RandomRestartHC.h"
 
+// Start from a random location and keep going until a local optima
+// is found
 bool RandomRestartHC::iterate() {
   auto solution = rand_vector(rand, length);
   float fitness = evaluator.evaluate(solution);

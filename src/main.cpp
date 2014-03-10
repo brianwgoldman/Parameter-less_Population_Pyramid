@@ -108,7 +108,7 @@ int main(int argc, char * argv[]) {
   } else { // single_run
     Record record = single_run(rand, config, problem, optimizer_method, 0);
     ofstream out(dat_file.c_str());
-    for (const auto& line : record.levels) {
+    for (const auto& line : record.progression()) {
       out << line.first << " " << line.second << endl;
     }
     out.close();
