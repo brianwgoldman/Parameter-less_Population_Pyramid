@@ -19,9 +19,9 @@ The command line accepts any number of configuration files and configuration fla
 in the form "-key value" where key is the name of the option to change and value is the
 value to change it to.  Arguments override in last given order.  For example:
 
-Release/P3 config/default.cfg config/alt1.cfg -problem NearestNeighborNK -length 50
+Release/P3 config/default.cfg config/p3.cfg -problem NearestNeighborNK -length 50
 
 This line will use the default configuration, replacing configuration values with those
-found in alt1.cfg, setting the problem to Nearest Neighbor NK with a genome size of 50.
+found in p3.cfg, setting the problem to Nearest Neighbor NK with a genome size of 50.
 
 Also, see main.cpp for other details.
