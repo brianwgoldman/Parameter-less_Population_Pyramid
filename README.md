@@ -24,4 +24,8 @@ Release/P3 config/default.cfg config/p3.cfg -problem NearestNeighborNK -length 5
 This line will use the default configuration, replacing configuration values with those
 found in p3.cfg, setting the problem to Nearest Neighbor NK with a genome size of 50.
 
-Also, see main.cpp for other details.
+All of the individual configuration files and output files are contained in raw.tar.
+
+The results are aggregated in complete.csv for use by the plotter.R and stats.R scripts.
+
+Also, see main.cpp for implementation related details.
