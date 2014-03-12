@@ -8,8 +8,7 @@ sep = ','
 pretty_names = {"hc": "Hill Climber",
                 "lambdalambda": "1+(Lambda Lambda)",
                 "ltga": "LTGA",
-                "alt1": "P3",
-                "p3": "P3-old"}
+                "p3": "P3"}
 
 print sep.join(headers)
 for filename in sys.argv[1:]:

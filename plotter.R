@@ -49,19 +49,7 @@ leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
 group_legend <- tmp$grobs[[leg]]
 nl <- theme(legend.position="none")
 
-SetupImage("AllPlots.eps")
-grid.arrange(arrangeGrob(
-             arrangeGrob(p1 + nl + labs(title="Deceptive Trap", x=NULL, y=NULL)),
-             arrangeGrob(p2 + nl + labs(title="Deceptive Step Trap", x=NULL, y=NULL)),
-             arrangeGrob(p3 + nl + labs(title="HIFF", x=NULL, y=NULL)),
-             arrangeGrob(p4 + nl + labs(title="Nearest Neighbor NK", x=NULL, y=NULL)),
-             arrangeGrob(p5 + nl + labs(title="Ising Spin Glass", x=NULL, y=NULL)),
-             arrangeGrob(p6 + nl + labs(title="MAX-SAT", x=NULL, y=NULL)),
-             sub="Problem Size\n", left="\nMedian Evaluations To Success", ncol=3),
-             group_legend, widths=c(4/5, 1/5), ncol=2)
-dev.off()
-
-SetupImage("WithRast.eps")
+SetupImage("AllTogether.eps")
 grid.arrange(arrangeGrob(p1 + nl + labs(title="Deceptive Trap", x=NULL, y=NULL)),
              arrangeGrob(p2 + nl + labs(title="Deceptive Step Trap", x=NULL, y=NULL)),
              arrangeGrob(p3 + nl + labs(title="HIFF", x=NULL, y=NULL)),
