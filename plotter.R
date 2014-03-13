@@ -3,6 +3,7 @@ library(ggplot2)
 library(scales)
 library(gridExtra)
 
+# Loads the complete.csv file
 data <- read.csv("complete.csv", header=TRUE)
 
 # If the best found in the run is less than 1, mark it as NA
@@ -15,7 +16,7 @@ SetupImage <- function(image_name) {
              horizontal=FALSE)
 }
 
-
+# Median is the center successful run
 my_median <- function(data) {
   worst <- max(data, na.rm=TRUE)
   data[is.na(data)] <- worst + 1
@@ -26,6 +27,7 @@ my_median <- function(data) {
   return(result)
 }
 
+# Plots a single problem's data
 make_plot <- function(data, problem_name) {
   plt <- ggplot(data = subset(data, problem==problem_name), aes(x = length, y=evaluations, color = solver))
   plt <- plt + geom_line(stat="summary", fun.y=my_median) + geom_point(stat="summary", fun.y=my_median, aes(shape=solver))
@@ -36,6 +38,8 @@ make_plot <- function(data, problem_name) {
   plt <- plt + scale_color_manual(values=cbMine)
   return(plt + theme(legend.title=element_blank()))
 }
+
+# Create a plot for each problem
 p1 <- make_plot(data, "DeceptiveTrap")
 p2 <- make_plot(data, "DeceptiveStepTrap")
 p3 <- make_plot(data, "HIFF")
@@ -44,11 +48,13 @@ p5 <- make_plot(data, "IsingSpinGlass")
 p6 <- make_plot(data, "MAXSAT")
 p7 <- make_plot(data, "Rastrigin")
 
+# Extract the common legend
 tmp <- ggplot_gtable(ggplot_build(p1))
 leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
 group_legend <- tmp$grobs[[leg]]
 nl <- theme(legend.position="none")
 
+# Arrange all of the problems into a single .eps file
 SetupImage("AllTogether.eps")
 grid.arrange(arrangeGrob(p1 + nl + labs(title="Deceptive Trap", x=NULL, y=NULL)),
              arrangeGrob(p2 + nl + labs(title="Deceptive Step Trap", x=NULL, y=NULL)),

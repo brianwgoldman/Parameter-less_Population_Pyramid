@@ -2,6 +2,7 @@
 library(boot)
 options(width=200)
 
+# Load all data in the complete.csv file
 all_data <- read.csv("complete.csv", header=TRUE)
 
 # Just LTGA and P3
@@ -12,6 +13,7 @@ largest <- aggregate(length~problem, data=subset(main_two, solver=="LTGA"), FUN=
 lookup <- largest$length
 names(lookup) <- largest$problem
 
+# Get only the largest successful problem size for LTGA
 data <- subset(main_two, length == lookup[problem])
 
 
@@ -23,6 +25,7 @@ compare <- function(problem_name) {
          data=subset(data, problem==problem_name))$p.value)
 }
 
+# Perform the statistical tests for each problem
 sapply(levels(data$problem), compare)
 
 median.fun <- function(x, d) {
@@ -37,4 +40,5 @@ straper <- function(data_in) {
   return(c(lower.ci=result[2], median=median(data_in), upper.ci=result[3]))
 }
 
+# Print out the end of run numbers for each problem and optimization method
 aggregate(evaluations~solver+problem+length, data=data, FUN=straper)
