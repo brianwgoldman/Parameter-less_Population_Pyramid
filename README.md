@@ -27,7 +27,9 @@ found in p3.cfg, setting the problem to Nearest Neighbor NK with a genome size o
 All of the individual configuration files and output files are contained in raw.tar.
 You can duplicate any of the experiments from the paper by running the associated cfg
 file from the raw.tar collection.  For instance:
+
 Release/P3 clean/DeceptiveTrap.0105.p3.cfg -verbosity 1
+
 This will run P3 on the Deceptive Trap problem using 105 bits.  The "verbosity" flag reduces
 the console spam.  The "final" folder will then contain the newly generated output.
 
