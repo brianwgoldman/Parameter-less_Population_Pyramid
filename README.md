@@ -1,5 +1,7 @@
-P3
+Deprecated version of P3! See https://github.com/brianwgoldman/FastEfficientP3 for the most recent version.
 ==
+This version exists solely to recreate the results of the paper by the same name.
+
 
 Parameterless Population Pyramid
 
